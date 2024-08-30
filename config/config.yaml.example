@@ -1,0 +1,24 @@
+data_collection:
+    update_interval: 300 # seconds 5 mins
+    currencies: 
+        - XRP/USD
+        - XRP/BTC
+
+analysis:
+    indicators:
+        - SMA
+        - EMA
+        - RSI
+    timeframes:
+        - 1h
+        - 4h
+        - 1d
+        - 1w
+
+tweet_generation:
+    frequency: 14400 # seconds 4 hours
+    max_length: 280
+
+logging:
+    level: INFO
+    file: bot.log
