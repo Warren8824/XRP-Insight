@@ -12,3 +12,6 @@ config/config.yaml
 # Operating Systems
 .DS_Store
 Thumbs.db
+
+# IDE Settings
+.idea/
