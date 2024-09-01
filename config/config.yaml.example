@@ -1,24 +1,22 @@
+api_keys:
+    coingecko: your_coingecko_api_key
+    twitter:
+        consumer_key: your_twitter_consumer_key
+        consumer_secret: your_twitter_consumer_secret
+        access_token: your_twitter_access_token
+        access_token_secret: your_twitter_access_token_secret
+    openai: your_openai_api_key
+
+database:
+    path: database/xrp_market_bot.db
+
 data_collection:
-    update_interval: 300 # seconds 5 mins
-    currencies: 
-        - XRP/USD
-        - XRP/BTC
+    interval_minutes: 15
 
-analysis:
-    indicators:
-        - SMA
-        - EMA
-        - RSI
-    timeframes:
-        - 1h
-        - 4h
-        - 1d
-        - 1w
-
-tweet_generation:
-    frequency: 14400 # seconds 4 hours
-    max_length: 280
+twitter_bot:
+    post_interval_hours: 1
+    max_tweets_per_days: 24
 
 logging:
     level: INFO
-    file: bot.log
+    file: logs/xrp_market_bot.log
