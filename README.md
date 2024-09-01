@@ -124,6 +124,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_twitter) - warrenbebbington88@gmail.com
+Warren Bebbington - [@your_twitter](https://twitter.com/your_twitter) - warrenbebbington88@gmail.com
 
 Project Link: [https://github.com/Warren8824/xrp-market-bot](https://github.com/Warren8824/xrp-market-bot)
