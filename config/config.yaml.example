@@ -1,14 +1,6 @@
-api_keys:
-    coingecko: your_coingecko_api_key
-    twitter:
-        consumer_key: your_twitter_consumer_key
-        consumer_secret: your_twitter_consumer_secret
-        access_token: your_twitter_access_token
-        access_token_secret: your_twitter_access_token_secret
-    openai: your_openai_api_key
-
 database:
-    path: database/xrp_market_bot.db
+    name: xrp_market_bot.db
+    path: database/
 
 data_collection:
     interval_minutes: 15
@@ -20,3 +12,7 @@ twitter_bot:
 logging:
     level: INFO
     file: logs/xrp_market_bot.log
+
+api_endpoints:
+    coingecko: https://api.coingecko.com/api/v3
+    xrpl: wss://xrplcluster.com
