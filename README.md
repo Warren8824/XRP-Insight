@@ -29,7 +29,8 @@ xrp_market_bot/
 │   │   └── __init__.py
 │   ├── utils/
 │   │   ├── __init__.py
-│   │   └── config.py
+│   │   ├── config.py
+│   │   └── logger.py
 │   ├── app.py
 │   └── constants.py
 ├── tests/
@@ -57,7 +58,7 @@ xrp_market_bot/
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/xrp_market_bot.git
+   git clone https://github.com/Warren8824/xrp_market_bot.git
    cd xrp_market_bot
    ```
 
@@ -143,4 +144,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Warren Bebbington - [@your_twitter](https://twitter.com/your_twitter) - warrenbebbington88@gmail.com
 
-Project Link: [https://github.com/Warren8824/xrp-market-bot](https://github.com/Warren8824/xrp-market-bot)
+Project Link: [https://github.com/Warren8824/xrp_market_bot](https://github.com/Warren8824/xrp_market_bot)
