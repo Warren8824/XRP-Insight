@@ -6,6 +6,9 @@ XRP Market Bot is a Python-based project that collects, analyzes, and reports on
 
 ```
 xrp_market_bot/
+├── .github/
+│   └── workflows/
+│       └── ci.yaml
 ├── config/
 │   └── config.yaml
 ├── database/
@@ -30,6 +33,16 @@ xrp_market_bot/
 │   ├── app.py
 │   └── constants.py
 ├── tests/
+│   ├── analysis/
+│   │   └── __init__.py
+│   ├── data_collection/
+│   │   └── __init__.py
+│   ├── models/
+│   │   └── __init__.py
+│   ├── tweet_generation/
+│   │   └── __init__.py
+│   ├── utils/
+│   │   └── __init__.py
 │   ├── __init__.py
 │   ├── __main__.py
 │   └── test_setup.py
@@ -44,7 +57,7 @@ xrp_market_bot/
 
 1. Clone the repository:
    ```
-   git clone https://github.com/Warren8824/xrp_market_bot.git
+   git clone https://github.com/yourusername/xrp_market_bot.git
    cd xrp_market_bot
    ```
 
@@ -104,7 +117,11 @@ To run the tests, use the following command from the project root directory:
 python -m tests
 ```
 
-This will discover and run all tests in the `tests` directory.
+This will discover and run all tests in the `tests` directory and its subdirectories.
+
+## Continuous Integration
+
+This project uses GitHub Actions for continuous integration. The workflow is defined in `.github/workflows/ci.yaml`. It automatically runs tests and checks code quality on every push and pull request.
 
 ## Usage
 
