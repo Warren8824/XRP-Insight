@@ -7,7 +7,7 @@ load_dotenv()  # Load environment variables from .env file
 
 
 def load_config():
-    with open("config/configuration.yaml", "r") as config_file:
+    with open("config/config.yaml", "r") as config_file:
         config = yaml.safe_load(config_file)
 
     # Merge with defaults and environment variables.
