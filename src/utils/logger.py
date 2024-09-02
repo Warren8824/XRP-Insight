@@ -20,4 +20,4 @@ log_directory = 'logs'
 if not os.path.exists(log_directory):
     os.makedirs(log_directory)
 
-logger = setup_logger('xrp_market_bot', 'logs/xrp_market_bot.log')
+logger = setup_logger(name='xrp_market_bot', log_file='logs/xrp_market_bot.log')
