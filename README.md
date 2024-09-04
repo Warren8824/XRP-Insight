@@ -175,6 +175,31 @@ def fetch_xrp_data():
 
 For a complete list of constants and their usage, please refer to the [constants documentation](docs/constants.md).
 
+## Database Models
+
+This project uses SQLAlchemy as an ORM (Object-Relational Mapping) to interact with a SQLite database. The base configuration for all database models is defined in `src/models/base.py`.
+
+Key features:
+- SQLite database with SQLAlchemy ORM
+- Centralized database configuration
+- Session management for database operations
+
+To define a new model:
+
+```python
+from src.models.base import Base
+from sqlalchemy import Column, Integer, String
+
+class YourModel(Base):
+    __tablename__ = "your_table_name"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    # Add more columns as needed
+```
+
+For detailed information about the database setup and model creation, please refer to the [base model documentation](docs/models/base.md).
+
 ## Continuous Integration
 
 This project uses GitHub Actions for continuous integration. The workflow is defined in `.github/workflows/ci.yaml`. It automatically runs tests and checks code quality on every push and pull request.
