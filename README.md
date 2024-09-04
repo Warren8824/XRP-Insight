@@ -156,6 +156,25 @@ coingecko_api_endpoint = config['api_endpoints']['coingecko']
 
 For detailed information about the configuration system, including setup instructions and best practices, please refer to the [configuration documentation](docs/utils/config.md).
 
+## Constants
+
+The project uses a set of predefined constants to maintain consistency across different modules. These constants include:
+
+- Internal constants: Such as the Coingecko ID for XRP, maximum tweet length, and maximum tokens for AI responses.
+- Default values: Like the default database name, which can be overridden in the configuration file.
+
+To use these constants in your code:
+
+```python
+from src.constants import XRP_ID, MAX_TWEET_LENGTH
+
+# Example usage
+def fetch_xrp_data():
+    return coingecko_api.get_coin_data(XRP_ID)
+```
+
+For a complete list of constants and their usage, please refer to the [constants documentation](docs/constants.md).
+
 ## Continuous Integration
 
 This project uses GitHub Actions for continuous integration. The workflow is defined in `.github/workflows/ci.yaml`. It automatically runs tests and checks code quality on every push and pull request.
