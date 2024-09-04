@@ -7,6 +7,7 @@ sys.path.append(project_root)
 
 from src.models.base import Base, engine
 from src.models.market_data import MarketData
+from src.models.ohlcv_15_min_data import OHLCV15Data
 
 # Import other models as needed, for example:
 # from src.models.on_chain_data import OnChainData
