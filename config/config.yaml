@@ -16,3 +16,6 @@ logging:
 api_endpoints:
     coingecko: https://api.coingecko.com/api/v3
     xrpl: wss://xrplcluster.com
+
+api_limits:
+    coinapi_daily: 100
