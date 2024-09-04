@@ -1,14 +1,14 @@
 import unittest
 import os
 import sys
+from sqlalchemy import inspect
+from src.models.base import engine
+from src.utils.config import config
 
 # Add the project root to the Python path
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
-from sqlalchemy import inspect
-from src.models.base import engine
-from src.utils.config import config
 
 class TestSetup(unittest.TestCase):
     def test_database(self):
@@ -20,7 +20,8 @@ class TestSetup(unittest.TestCase):
         self.assertIn('name', config['database'], "Database name is missing from configuration")
         self.assertIn('path', config['database'], "Database path is missing from configuration")
         self.assertIn('data_collection', config, "Data collection configuration is missing")
-        self.assertIn('interval_minutes', config['data_collection'], "Data collection interval is missing from configuration")
+        self.assertIn('interval_minutes', config['data_collection'],
+                      "Data collection interval is missing from configuration.")
         self.assertIn('api_endpoints', config, "API endpoints configuration is missing")
         self.assertIn('coingecko', config['api_endpoints'], "CoinGecko API endpoint is missing from configuration")
 
@@ -43,8 +44,6 @@ class TestSetup(unittest.TestCase):
                     print(f"  {subkey}: {'*' * 16 + subvalue[-4:] if subvalue else 'Not set'}")
             else:
                 print(f"\n{key.capitalize()} API Key: {'*' * 16 + value[-4:] if value else 'Not set'}")
-
-        #self.assertTrue(True)  # This ensures the test always passes after printing
 
 
 if __name__ == '__main__':
