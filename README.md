@@ -21,6 +21,7 @@ xrp_market_bot/
 │   └── models
 │   └── tweet_generation
 │   └── utils
+        └── config.md
 │       └── logger.md
 ├── logs/
 ├── scripts/
@@ -91,7 +92,7 @@ xrp_market_bot/
    TWITTER_ACCESS_TOKEN_SECRET=your_twitter_access_token_secret
    OPENAI_API_KEY=your_openai_api_key
    
-   APP_ENV=development # Set this to development/staging/production, more info in 'docs/utils/logger.md'
+   APP_ENV=development # Set this to development/staging/production.
    ```
 
 5. Update the `config/config.yaml` file with your desired configuration:
@@ -131,6 +132,30 @@ python -m tests
 
 This will discover and run all tests in the `tests` directory and its subdirectories.
 
+## Configuration
+
+This project uses a flexible configuration system that combines settings from a YAML file (`config/config.yaml`) and environment variables (`.env`). The configuration system provides:
+
+- Centralized management of application settings
+- Environment-specific configurations
+- Secure handling of API keys and sensitive information
+
+Key components:
+- `config/config.yaml`: Contains general settings for database, data collection, Twitter bot, logging, and API endpoints.
+- `.env`: Stores sensitive information like API keys and environment setting.
+- `utils/config.py`: Loads and merges configuration from both sources.
+
+To use the configuration in your code:
+
+```python
+from utils.config import config
+
+database_name = config['database']['name']
+coingecko_api_endpoint = config['api_endpoints']['coingecko']
+```
+
+For detailed information about the configuration system, including setup instructions and best practices, please refer to the [configuration documentation](docs/utils/config.md).
+
 ## Continuous Integration
 
 This project uses GitHub Actions for continuous integration. The workflow is defined in `.github/workflows/ci.yaml`. It automatically runs tests and checks code quality on every push and pull request.
@@ -138,6 +163,24 @@ This project uses GitHub Actions for continuous integration. The workflow is def
 ## Usage
 
 (Note: Add usage instructions here once the main application features are implemented)
+
+## Logging
+
+This project uses a comprehensive logging system that provides environment-specific logging configurations and separate loggers for each module. For detailed information about the logging system, including usage instructions and best practices, please refer to the [logger documentation](docs/utils/logger.md).
+
+Key features of the logging system:
+- Environment-specific configurations (development, staging, production)
+- Separate loggers for each module
+- Rotating file handlers to manage log file sizes
+- Console output with environment-specific log levels
+
+To use a logger in your code:
+
+```python
+from utils.logger import data_collection_logger
+
+data_collection_logger.info("Starting data collection process")
+```
 
 ## Contributing
 
