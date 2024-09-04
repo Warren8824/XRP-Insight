@@ -44,7 +44,7 @@ class TestSetup(unittest.TestCase):
             else:
                 print(f"\n{key.capitalize()} API Key: {'*' * 16 + value[-4:] if value else 'Not set'}")
 
-        self.assertTrue(True)  # This ensures the test always passes after printing
+        #self.assertTrue(True)  # This ensures the test always passes after printing
 
 
 if __name__ == '__main__':
