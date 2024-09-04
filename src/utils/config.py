@@ -25,6 +25,8 @@ def load_config():
     config['data_collection']['interval_seconds'] = config['data_collection'].get('interval_minutes', 15) * 60
     config['database']['name'] = config['database'].get('name', DEFAULT_DATABASE_NAME)
 
+    # Add additional configuration variables below as the project expands
+
     return config
 
 
