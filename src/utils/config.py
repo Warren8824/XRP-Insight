@@ -13,6 +13,7 @@ def load_config():
     # Merge with defaults and environment variables.
     config['api_keys'] = {
         'coingecko': os.getenv('COINGECKO_API_KEY'),
+        'coinapi': os.getenv('COINAPI_API_KEY'),
         'twitter': {
             'consumer_key': os.getenv('TWITTER_CONSUMER_KEY'),
             'consumer_secret': os.getenv('TWITTER_CONSUMER_SECRET'),
