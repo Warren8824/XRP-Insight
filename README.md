@@ -198,7 +198,9 @@ class YourModel(Base):
     # Add more columns as needed
 ```
 
-For detailed information about the database setup and model creation, please refer to the [base model documentation](docs/models/base.md).
+The database is initialized using the `scripts/init_db.py` script (see Setup instructions). When adding new models, make sure they are imported in this script to ensure their tables are created.
+
+For detailed information about the database setup, model creation, and initialization process, please refer to the [base model documentation](docs/models/base.md) and the [init_db documentation](docs/init_db.md).
 
 ## Continuous Integration
 
