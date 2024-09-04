@@ -12,7 +12,16 @@ xrp_market_bot/
 ├── config/
 │   └── config.yaml
 ├── database/
+│   └──  xrp_market_bot.db
 ├── docs/
+│   └── ai_analysis
+│   └── analysis
+│   └── api
+│   └── data_collection
+│   └── models
+│   └── tweet_generation
+│   └── utils
+│       └── logger.md
 ├── logs/
 ├── scripts/
 │   └── init_db.py
@@ -81,6 +90,8 @@ xrp_market_bot/
    TWITTER_ACCESS_TOKEN=your_twitter_access_token
    TWITTER_ACCESS_TOKEN_SECRET=your_twitter_access_token_secret
    OPENAI_API_KEY=your_openai_api_key
+   
+   APP_ENV=development # Set this to development/staging/production, more info in 'docs/utils/logger.md'
    ```
 
 5. Update the `config/config.yaml` file with your desired configuration:
