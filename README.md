@@ -86,6 +86,7 @@ xrp_market_bot/
 4. Create a `.env` file in the project root and add your API keys:
    ```
    COINGECKO_API_KEY=your_coingecko_api_key
+   COINAPI_API_KEY=your_coinapi_api_key
    TWITTER_CONSUMER_KEY=your_twitter_consumer_key
    TWITTER_CONSUMER_SECRET=your_twitter_consumer_secret
    TWITTER_ACCESS_TOKEN=your_twitter_access_token
