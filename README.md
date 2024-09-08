@@ -3,7 +3,7 @@
 XRP Insight is an advanced real-time analysis and AI-driven content generation system for the XRP cryptocurrency market. It collects data from various APIs, processes and analyzes this data using TimescaleDB, and generates insightful content using AI. This project aims to provide cryptocurrency enthusiasts, traders, and researchers with valuable, data-driven insights about XRP.
 
 ## Project Structure
-
+```
 xrp_insight/
 ├── .github/
 │   └── workflows/
@@ -79,11 +79,11 @@ xrp_insight/
 ├── LICENSE
 ├── README.md
 └── requirements.txt
-
+```
 ## Setup
 
-1. Clone the repository: `git clone https://github.com/Warren8824/xrp_insight.git
-cd xrp_insight`
+1. Clone the repository: `git clone https://github.com/Warren8824/xrp_insight.git`
+`cd xrp_insight`
 
 2. Create a virtual environment and activate it: `python -m venv venv`
 `source venv/bin/activate`  # On Windows, use `venv\Scripts\activate`
