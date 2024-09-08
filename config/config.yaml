@@ -1,5 +1,5 @@
 database:
-    name: xrp_market_bot.db
+    name: xrp_insight.db
     path: database/
 
 data_collection:
@@ -11,7 +11,7 @@ twitter_bot:
 
 logging:
     level: INFO
-    file: logs/xrp_market_bot.log
+    file: logs/xrp_insight.log
 
 api_endpoints:
     coingecko: https://api.coingecko.com/api/v3

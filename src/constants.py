@@ -5,4 +5,4 @@ MAX_TOKENS = 100  # Maximum number of tokens for OpenAI API response.
 
 # Default values (Can be overridden in configuration.yaml).
 
-DEFAULT_DATABASE_NAME = "xrp_market_bot.db"
+DEFAULT_DATABASE_NAME = "xrp_insight.db"

@@ -1,248 +1,141 @@
-# XRP Market Bot
+# XRP Insight
 
-XRP Market Bot is a Python-based project that collects, analyzes, and reports on XRP market data. It uses various APIs to gather information, stores it in a SQLite database, and provides insights through data analysis and a Twitter bot.
+XRP Insight is an advanced real-time analysis and AI-driven content generation system for the XRP cryptocurrency market. It collects data from various APIs, processes and analyzes this data using TimescaleDB, and generates insightful content using AI. This project aims to provide cryptocurrency enthusiasts, traders, and researchers with valuable, data-driven insights about XRP.
 
 ## Project Structure
 
-```
-xrp_market_bot/
+xrp_insight/
 ├── .github/
 │   └── workflows/
 │       └── ci.yaml
 ├── config/
 │   └── config.yaml
-├── database/
-│   └──  xrp_market_bot.db
 ├── docs/
-│   └── ai_analysis
-│   └── analysis
-│   └── api
-│   └── data_collection
-│   └── models
-│   └── tweet_generation
-│   └── utils
-        └── config.md
-│       └── logger.md
+│   ├── whitepaper.md
+│   ├── appendix_a_technical_specifications.md
+│   ├── appendix_b_database_schema.md
+│   ├── appendix_c_api_integration.md
+│   └── yellow_paper.md
 ├── logs/
 ├── scripts/
-│   └── init_db.py
+│   ├── init_db.py
+│   └── data_backfill.py
 ├── src/
-│   ├── analysis/
-│   │   └── __init__.py
 │   ├── data_collection/
-│   │   └── __init__.py
+│   │   ├── init.py
+│   │   ├── coingecko_client.py
+│   │   ├── coinapi_client.py
+│   │   └── collector.py
+│   ├── data_processing/
+│   │   ├── init.py
+│   │   ├── cleaning.py
+│   │   └── aggregation.py
+│   ├── analysis/
+│   │   ├── init.py
+│   │   ├── indicators.py
+│   │   └── trends.py
 │   ├── models/
-│   │   ├── __init__.py
+│   │   ├── init.py
 │   │   ├── base.py
-│   │   └── market_data.py
-│   ├── tweet_generation/
-│   │   └── __init__.py
+│   │   ├── market_data.py
+│   │   ├── ohlcv_data.py
+│   │   └── technical_indicators.py
+│   ├── ai_integration/
+│   │   ├── init.py
+│   │   └── gpt_client.py
+│   ├── content_generation/
+│   │   ├── init.py
+│   │   ├── templates.py
+│   │   └── generator.py
 │   ├── utils/
-│   │   ├── __init__.py
+│   │   ├── init.py
 │   │   ├── config.py
 │   │   └── logger.py
 │   ├── app.py
 │   └── constants.py
 ├── tests/
-│   ├── analysis/
-│   │   └── __init__.py
 │   ├── data_collection/
-│   │   └── __init__.py
+│   │   └── test_collectors.py
+│   ├── data_processing/
+│   │   ├── test_cleaning.py
+│   │   └── test_aggregation.py
+│   ├── analysis/
+│   │   └── test_indicators.py
 │   ├── models/
-│   │   └── __init__.py
-│   ├── tweet_generation/
-│   │   └── __init__.py
+│   │   └── test_models.py
+│   ├── ai_integration/
+│   │   └── test_gpt_client.py
+│   ├── content_generation/
+│   │   └── test_generator.py
 │   ├── utils/
-│   │   └── __init__.py
-│   ├── __init__.py
-│   ├── __main__.py
-│   └── test_setup.py
+│   │   ├── test_config.py
+│   │   └── test_logger.py
+│   ├── init.py
+│   └── conftest.py
 ├── .env
 ├── .gitignore
+├── docker-compose.yml
+├── Dockerfile
 ├── LICENSE
 ├── README.md
 └── requirements.txt
-```
 
 ## Setup
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/Warren8824/xrp_market_bot.git
-   cd xrp_market_bot
-   ```
+1. Clone the repository: git clone https://github.com/Warren8824/xrp_insight.git
+cd xrp_insight
 
-2. Create a virtual environment and activate it:
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-   ```
+2. Create a virtual environment and activate it: python -m venv venv
+source venv/bin/activate  # On Windows, use venv\Scripts\activate
 
-3. Install the required packages:
-   ```
-   pip install -r requirements.txt
-   ```
+3. Install the required packages: pip install -r requirements.txt
 
-4. Create a `.env` file in the project root and add your API keys:
-   ```
-   COINGECKO_API_KEY=your_coingecko_api_key
-   COINAPI_API_KEY=your_coinapi_api_key
-   TWITTER_CONSUMER_KEY=your_twitter_consumer_key
-   TWITTER_CONSUMER_SECRET=your_twitter_consumer_secret
-   TWITTER_ACCESS_TOKEN=your_twitter_access_token
-   TWITTER_ACCESS_TOKEN_SECRET=your_twitter_access_token_secret
-   OPENAI_API_KEY=your_openai_api_key
-   
-   APP_ENV=development # Set this to development/staging/production.
-   ```
+4. Set up TimescaleDB:
+- Install TimescaleDB on your system or use the provided Docker configuration.
+- Create a database for the project.
 
-5. Update the `config/config.yaml` file with your desired configuration:
-   ```yaml
-   database:
-     name: xrp_market_bot.db
-     path: database/
-   
-   data_collection:
-     interval_minutes: 15
-   
-   twitter_bot:
-     post_interval_hours: 1
-     max_tweets_per_day: 24
-   
-   logging:
-     level: INFO
-     file: logs/xrp_market_bot.log
-   
-   api_endpoints:
-     coingecko: https://api.coingecko.com/api/v3
-     xrpl: wss://xrplcluster.com
-   ```
+5. Create a `.env` file in the project root and add your API keys and database connection string: COINGECKO_API_KEY=your_coingecko_api_key
+COINAPI_API_KEY=your_coinapi_api_key
+OPENAI_API_KEY=your_openai_api_key
+DATABASE_URL=postgresql://username:password@localhost:5432/xrp_insight
+APP_ENV=development # Set this to development/staging/production
 
-6. Initialize the database:
-   ```
-   python scripts/init_db.py
-   ```
+6. Update the `config/config.yaml` file with your desired configuration:
+```yaml
+database:
+  url: ${DATABASE_URL}
+
+data_collection:
+  interval_minutes: 15
+
+content_generation:
+  interval_hours: 4
+  max_posts_per_day: 6
+
+logging:
+  level: INFO
+  file: logs/xrp_insight.log
+
+api_endpoints:
+  coingecko: https://api.coingecko.com/api/v3
+  coinapi: https://rest.coinapi.io/v1
+```
+
+7. Initialize the database: python scripts/init_db.py
+
+8. (Optional) Run the data backfill script to populate historical data: python scripts/data_backfill.py
+
+## Running the Application
+
+To start the XRP Insight application:
+Copypython src/app.py
 
 ## Running Tests
 
 To run the tests, use the following command from the project root directory:
+Copypython -m pytest
 
-```
-python -m tests
-```
-
-This will discover and run all tests in the `tests` directory and its subdirectories.
+This will discover and run all tests in the tests directory and its subdirectories.
 
 ## Configuration
 
-This project uses a flexible configuration system that combines settings from a YAML file (`config/config.yaml`) and environment variables (`.env`). The configuration system provides:
-
-- Centralized management of application settings
-- Environment-specific configurations
-- Secure handling of API keys and sensitive information
-
-Key components:
-- `config/config.yaml`: Contains general settings for database, data collection, Twitter bot, logging, and API endpoints.
-- `.env`: Stores sensitive information like API keys and environment setting.
-- `utils/config.py`: Loads and merges configuration from both sources.
-
-To use the configuration in your code:
-
-```python
-from utils.config import config
-
-database_name = config['database']['name']
-coingecko_api_endpoint = config['api_endpoints']['coingecko']
-```
-
-For detailed information about the configuration system, including setup instructions and best practices, please refer to the [configuration documentation](docs/utils/config.md).
-
-## Constants
-
-The project uses a set of predefined constants to maintain consistency across different modules. These constants include:
-
-- Internal constants: Such as the Coingecko ID for XRP, maximum tweet length, and maximum tokens for AI responses.
-- Default values: Like the default database name, which can be overridden in the configuration file.
-
-To use these constants in your code:
-
-```python
-from src.constants import XRP_ID, MAX_TWEET_LENGTH
-
-# Example usage
-def fetch_xrp_data():
-    return coingecko_api.get_coin_data(XRP_ID)
-```
-
-For a complete list of constants and their usage, please refer to the [constants documentation](docs/constants.md).
-
-## Database Models
-
-This project uses SQLAlchemy as an ORM (Object-Relational Mapping) to interact with a SQLite database. The base configuration for all database models is defined in `src/models/base.py`.
-
-Key features:
-- SQLite database with SQLAlchemy ORM
-- Centralized database configuration
-- Session management for database operations
-
-To define a new model:
-
-```python
-from src.models.base import Base
-from sqlalchemy import Column, Integer, String
-
-class YourModel(Base):
-    __tablename__ = "your_table_name"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    # Add more columns as needed
-```
-
-The database is initialized using the `scripts/init_db.py` script (see Setup instructions). When adding new models, make sure they are imported in this script to ensure their tables are created.
-
-For detailed information about the database setup, model creation, and initialization process, please refer to the [base model documentation](docs/models/base.md) and the [init_db documentation](docs/init_db.md).
-
-## Continuous Integration
-
-This project uses GitHub Actions for continuous integration. The workflow is defined in `.github/workflows/ci.yaml`. It automatically runs tests and checks code quality on every push and pull request.
-
-## Usage
-
-(Note: Add usage instructions here once the main application features are implemented)
-
-## Logging
-
-This project uses a comprehensive logging system that provides environment-specific logging configurations and separate loggers for each module. For detailed information about the logging system, including usage instructions and best practices, please refer to the [logger documentation](docs/utils/logger.md).
-
-Key features of the logging system:
-- Environment-specific configurations (development, staging, production)
-- Separate loggers for each module
-- Rotating file handlers to manage log file sizes
-- Console output with environment-specific log levels
-
-To use a logger in your code:
-
-```python
-from utils.logger import data_collection_logger
-
-data_collection_logger.info("Starting data collection process")
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## Contact
-
-Warren Bebbington - [@your_twitter](https://twitter.com/your_twitter) - warrenbebbington88@gmail.com
-
-Project Link: [https://github.com/Warren8824/xrp_market_bot](https://github.com/Warren8824/xrp_market_bot)

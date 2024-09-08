@@ -1,7 +1,7 @@
 import os
 import yaml
 from dotenv import load_dotenv
-from src.constants import DEFAULT_DATABASE_NAME # Incase settings name is not entered revert to xrp_market_bot.db
+from src.constants import DEFAULT_DATABASE_NAME # Incase settings name is not entered revert to xrp_insight.db
 
 load_dotenv()  # Load environment variables from .env file
 
