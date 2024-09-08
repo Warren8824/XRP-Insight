@@ -1,7 +1,6 @@
 import os
 import yaml
 from dotenv import load_dotenv
-from src.constants import DEFAULT_DATABASE_NAME # Incase settings name is not entered revert to xrp_insight.db
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -22,11 +21,12 @@ def load_config():
         },
         'openai': os.getenv('OPENAI_API_KEY'),
     }
+
     # Use defaults if not specified in configuration.yaml
     config['data_collection']['interval_seconds'] = config['data_collection'].get('interval_minutes', 15) * 60
-    config['database']['name'] = config['database'].get('name', DEFAULT_DATABASE_NAME)
 
     # Add additional configuration variables below as the project expands
+    config['database_url'] = os.getenv('DATABASE_URL')  # Postgres credentials
 
     return config
 

@@ -1,6 +1,5 @@
 database:
-    name: xrp_insight.db
-    path: database/
+    url: ${DATABASE_URL}
 
 data_collection:
     interval_minutes: 15
