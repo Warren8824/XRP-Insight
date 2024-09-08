@@ -1,12 +1,13 @@
 from sqlalchemy import Column, Integer, Float, DateTime
-from sqlalchemy.sql import func
-from src.models.base import Base
+from .base import Base
+
 
 class MarketData(Base):
     __tablename__ = "market_data"
+    __table_args__ = {"info": {"is_hypertable": True, "hypertable_interval": "1 day"}}
 
     id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime(timezone=True), server_default=func.now(), index=True)
+    timestamp = Column(DateTime(timezone=True), index=True)
     price_usd = Column(Float)
     market_cap = Column(Float)
     volume_24h = Column(Float)

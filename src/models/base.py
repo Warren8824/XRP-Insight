@@ -1,25 +1,28 @@
-import os.path
-
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.schema import MetaData
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.sql.ddl import CreateTable
+
 from src.utils.config import config
 
-# Get database configuration
-db_name = config['database']['name']
-db_path = config['database']['path']
+SQLALCHEMY_DATABASE_URL = config['database']['url']
 
-# Construct full path to the database file
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-ful_db_path = os.path.join(project_root, db_path, db_name)
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{ful_db_path}"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+
+# This is to support TimescaleDB hypertables
+@compiles(CreateTable, "postgresql")
+def compile_create_table(element, compiler, **kw):
+    table = element.element
+    if table.info.get("is_hypertable", False):
+        return f"{compiler.visit_create_table(element)} WITH (hypertable_interval = '{table.info['hypertable_interval']}')"
+    return compiler.visit_create_table(element)
+
 
 def get_db():
     db = SessionLocal()
@@ -27,3 +30,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def init_db():
+    Base.metadata.create_all(bind=engine)
+
+    # Create TimescaleDB extension
+    with engine.connect() as conn:
+        conn.execute("CREATE EXTENSION IF NOT EXISTS timescaledb")
