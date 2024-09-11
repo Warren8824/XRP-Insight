@@ -3,6 +3,7 @@ from src.data_collection.collector import collect_historical_data
 from src.models.base import SessionLocal
 from src.utils.logger import utils_logger as logger
 
+
 def bf_data(start_date, end_date):
     db = SessionLocal()
     try:
