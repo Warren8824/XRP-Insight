@@ -10,11 +10,32 @@ xrp_insight/
 │       └── ci.yaml
 ├── config/
 │   └── config.yaml
+├── docs/
+│   ├── __init__.py
+│   ├── data_collection/
+│   │   └── __init__.py
+│   ├── data_processing/
+│   │   └── __init__.py
+│   ├── analysis/
+│   │   └── __init__.py
+│   ├── ai_integration/
+│   │   └── __init__.py
+│   ├── content_generation/
+│   │   └── __init__.py
+│   ├── models/
+│   │   └── __init__.py
+│   ├── utils/
+│   │   └── __init__.py
+│   ├── api/
+│   │   └── __init__.py
+│   └── scheduler/
+│       └── __init__.py
 ├── logs/
 ├── scripts/
 │   ├── init_db.py
 │   └── backfill_historical_data.py
 ├── src/
+│   ├── __init__.py
 │   ├── data_collection/
 │   │   ├── __init__.py
 │   │   ├── coingecko_client.py
@@ -23,29 +44,50 @@ xrp_insight/
 │   ├── data_processing/
 │   │   ├── __init__.py
 │   │   └── indicators.py
+│   ├── analysis/
+│   │   └── __init__.py
+│   ├── ai_integration/
+│   │   └── __init__.py
+│   ├── content_generation/
+│   │   └── __init__.py
 │   ├── models/
 │   │   ├── __init__.py
 │   │   ├── base.py
 │   │   ├── market_data_15_min.py
-│   │   └── ohlcv_data_15_min.py
+│   │   ├── ohlcv_data_15_min.py
+│   │   └── technical_indicators_15_min.py
 │   ├── utils/
 │   │   ├── __init__.py
 │   │   ├── config.py
 │   │   └── logger.py
+│   ├── api/
+│   │   └── __init__.py
+│   ├── scheduler/
+│   │   ├── __init__.py
+│   │   └── tasks.py
 │   ├── app.py
 │   └── constants.py
 ├── tests/
-│   ├── data_collection/
-│   │   └── test_collectors.py
-│   ├── data_processing/
-│   │   └── test_indicators.py
-│   ├── models/
-│   │   └── test_models.py
-│   ├── utils/
-│   │   ├── test_config.py
-│   │   └── test_logger.py
 │   ├── __init__.py
-│   └── conftest.py
+│   ├── __main__.py
+│   ├── data_collection/
+│   │   └── __init__.py
+│   ├── data_processing/
+│   │   └── __init__.py
+│   ├── analysis/
+│   │   └── __init__.py
+│   ├── ai_integration/
+│   │   └── __init__.py
+│   ├── content_generation/
+│   │   └── __init__.py
+│   ├── models/
+│   │   └── __init__.py
+│   ├── utils/
+│   │   └── __init__.py
+│   ├── api/
+│   │   └── __init__.py
+│   └── scheduler/
+│       └── __init__.py
 ├── .env
 ├── .gitignore
 ├── docker-compose.yml
