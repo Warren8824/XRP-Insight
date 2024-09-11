@@ -1,82 +1,37 @@
 import requests
-from datetime import datetime, timedelta, timezone
-import pandas as pd
-from sqlalchemy import func
-from src.models.base import Base, get_db
-from src.models.ohlcv_data_15_min import OHLCV15Data
 from src.utils.config import config
-from src.utils.logger import data_collection_logger
-
-API_KEY = config['api_keys']['coinapi']
-BASE_URL = 'https://rest.coinapi.io/v1/ohlcv/BITSTAMP_SPOT_XRP_USD/history'
 
 
-def fetch_ohlcv_historic_data(start_date, end_date):
-    headers = {'X-CoinAPI-Key': API_KEY}
-    params = {
-        'period_id': '15MIN',
-        'time_start': start_date.isoformat(),
-        'time_end': end_date.isoformat(),
-        'limit': 3456
-    }
+class CoinAPIClient:
+    def __init__(self):
+        self.base_url = config['api_endpoints']['coinapi']
+        self.api_key = config['api_keys']['coinapi']
+        self.daily_limit = config['api_limits']['coinapi_daily']
 
-    response = requests.get(BASE_URL, headers=headers, params=params)
+    def get_ohlcv_data(self):
+        endpoint = f"{self.base_url}/ohlcv/BITSTAMP_SPOT_XRP_USD/latest"
+        params = {
+            "period_id": "15MIN",
+            "limit": 1
+        }
+        headers = {"X-CoinAPI-Key": self.api_key}
 
-    if response.status_code == 200:
-        data_collection_logger.info(f"OHLCV historic data received for period: {start_date.isoformat()} to {end_date.isoformat()}")
+        response = requests.get(endpoint, params=params, headers=headers)
+        response.raise_for_status()
         return response.json()
-    else:
-        print(f"Error: {response.status_code}, {response.text}")
-        return None
 
+    def get_historical_ohlcv_data(self, start_time, end_time=None, limit=config['api_limits']['coinapi_daily']):
+        endpoint = f"{self.base_url}/ohlcv/BITSTAMP_SPOT_XRP_USD/history"
+        params = {
+            "period_id": "15MIN",
+            "time_start": start_time.isoformat(),
+            "limit": min(limit, self.daily_limit)  # Ensure we don't exceed daily limit
+        }
+        if end_time:
+            params["time_end"] = end_time.isoformat()
 
-def get_earliest_timestamp(db):
-    return db.query(func.min(OHLCV15Data.timestamp)).scalar()
+        headers = {"X-CoinAPI-Key": self.api_key}
 
-
-def process_and_save_data(data, db):
-    df = pd.DataFrame(data)
-    df['timestamp'] = pd.to_datetime(df['time_period_start'])
-    df['price_change'] = df['price_close'] - df['price_open']
-
-    for _, row in df.iterrows():
-        ohlcv_data = OHLCV15Data(
-            timestamp=row['timestamp'],
-            open=row['price_open'],
-            high=row['price_high'],
-            low=row['price_low'],
-            close=row['price_close'],
-            volume=row['volume_traded'],
-            price_change=row['price_change']
-        )
-        db.add(ohlcv_data)
-
-    db.commit()
-
-
-# Main execution
-def main():
-    db = next(get_db())
-    Base.metadata.create_all(bind=db.bind)  # Ensure the table is created
-
-    earliest_timestamp = get_earliest_timestamp(db)
-
-    if earliest_timestamp:
-        end_date = earliest_timestamp
-    else:
-        end_date = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
-
-    start_date = end_date - timedelta(days=36)
-
-    data = fetch_ohlcv_historic_data(start_date, end_date)
-    if data:
-        process_and_save_data(data, db)
-        print(f"Saved data for period: {start_date} to {end_date}")
-    else:
-        print(f"Failed to fetch data for period: {start_date} to {end_date}")
-
-    print("Script execution complete. Run again for the next chunk of data.")
-
-
-if __name__ == "__main__":
-    main()
+        response = requests.get(endpoint, params=params, headers=headers)
+        response.raise_for_status()
+        return response.json()
