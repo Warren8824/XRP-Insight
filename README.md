@@ -10,45 +10,26 @@ xrp_insight/
 │       └── ci.yaml
 ├── config/
 │   └── config.yaml
-├── docs/
-│   ├── whitepaper.md
-│   ├── appendix_a_technical_specifications.md
-│   ├── appendix_b_database_schema.md
-│   ├── appendix_c_api_integration.md
-│   └── yellow_paper.md
 ├── logs/
 ├── scripts/
 │   ├── init_db.py
-│   └── data_backfill.py
+│   └── backfill_historical_data.py
 ├── src/
 │   ├── data_collection/
-│   │   ├── init.py
+│   │   ├── __init__.py
 │   │   ├── coingecko_client.py
 │   │   ├── coinapi_client.py
 │   │   └── collector.py
 │   ├── data_processing/
-│   │   ├── init.py
-│   │   ├── cleaning.py
-│   │   └── aggregation.py
-│   ├── analysis/
-│   │   ├── init.py
-│   │   ├── indicators.py
-│   │   └── trends.py
+│   │   ├── __init__.py
+│   │   └── indicators.py
 │   ├── models/
-│   │   ├── init.py
+│   │   ├── __init__.py
 │   │   ├── base.py
-│   │   ├── market_data.py
-│   │   ├── ohlcv_data.py
-│   │   └── technical_indicators.py
-│   ├── ai_integration/
-│   │   ├── init.py
-│   │   └── gpt_client.py
-│   ├── content_generation/
-│   │   ├── init.py
-│   │   ├── templates.py
-│   │   └── generator.py
+│   │   ├── market_data_15_min.py
+│   │   └── ohlcv_data_15_min.py
 │   ├── utils/
-│   │   ├── init.py
+│   │   ├── __init__.py
 │   │   ├── config.py
 │   │   └── logger.py
 │   ├── app.py
@@ -57,20 +38,13 @@ xrp_insight/
 │   ├── data_collection/
 │   │   └── test_collectors.py
 │   ├── data_processing/
-│   │   ├── test_cleaning.py
-│   │   └── test_aggregation.py
-│   ├── analysis/
 │   │   └── test_indicators.py
 │   ├── models/
 │   │   └── test_models.py
-│   ├── ai_integration/
-│   │   └── test_gpt_client.py
-│   ├── content_generation/
-│   │   └── test_generator.py
 │   ├── utils/
 │   │   ├── test_config.py
 │   │   └── test_logger.py
-│   ├── init.py
+│   ├── __init__.py
 │   └── conftest.py
 ├── .env
 ├── .gitignore
