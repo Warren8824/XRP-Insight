@@ -5,15 +5,31 @@ import sys
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
-from src.models import Base
-from src.models.base import engine
+from sqlalchemy import create_engine, text
+from src.models.base import Base
+from src.models.ohlcv_data_15_min import OHLCV15Data
+from src.models.market_data_15_min import MarketData15Min
+from src.models.technical_indicators import TechnicalIndicators
+from src.utils.config import config
 
 
 def init_db():
-    # Create all tables
-    Base.metadata.create_all(bind=engine)
-    print("Database tables created successfully.")
+    engine = create_engine(config['database']['url'])
+
+    # Create TimescaleDB extension
+    with engine.connect() as conn:
+        conn.execute(text("CREATE EXTENSION IF NOT EXISTS timescaledb"))
+
+    # Create tables
+    Base.metadata.create_all(engine)
+
+    # Create hypertables
+    with engine.connect() as conn:
+        conn.execute(text("SELECT create_hypertable('ohlcv_15_data', 'timestamp', if_not_exists => TRUE)"))
+        conn.execute(text("SELECT create_hypertable('market_data_15_min', 'timestamp', if_not_exists => TRUE)"))
+        conn.execute(text("SELECT create_hypertable('technical_indicators', 'timestamp', if_not_exists => TRUE)"))
 
 
 if __name__ == "__main__":
     init_db()
+    print("Database initialized successfully.")
