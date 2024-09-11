@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 import pandas as pd
 from sqlalchemy import func
 from src.models.base import Base, get_db
-from src.models.ohlcv_15_min_data import OHLCV15Data
+from src.models.ohlcv_data_15_min import OHLCV15Data
 from src.utils.config import config
 from src.utils.logger import data_collection_logger
 

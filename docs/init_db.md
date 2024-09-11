@@ -19,7 +19,8 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
 from src.models.base import Base, engine
-from src.models.market_data import MarketData
+from src.models.market_data_15_min import MarketData
+
 
 # Import other models as needed, for example:
 # from src.models.on_chain_data import OnChainData
@@ -30,6 +31,7 @@ def init_db():
     # Create all tables
     Base.metadata.create_all(bind=engine)
     print("Database tables created successfully.")
+
 
 if __name__ == "__main__":
     init_db()

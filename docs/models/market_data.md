@@ -60,8 +60,9 @@ The `MarketData` model has the following attributes:
 To create a new market data record:
 
 ```python
-from src.models.market_data import MarketData
+from src.models.market_data_15_min import MarketData
 from src.models.base import get_db
+
 
 def save_market_data(price_usd, market_cap, volume_24h, price_change_24h):
     db = next(get_db())
@@ -85,8 +86,9 @@ def save_market_data(price_usd, market_cap, volume_24h, price_change_24h):
 To query market data records:
 
 ```python
-from src.models.market_data import MarketData
+from src.models.market_data_15_min import MarketData
 from src.models.base import get_db
+
 
 def get_latest_market_data():
     db = next(get_db())
@@ -94,6 +96,7 @@ def get_latest_market_data():
         return db.query(MarketData).order_by(MarketData.timestamp.desc()).first()
     finally:
         db.close()
+
 
 def get_market_data_range(start_date, end_date):
     db = next(get_db())

@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, Float, DateTime
 from .base import Base
 
 
-class MarketData(Base):
-    __tablename__ = "market_15_data"
+class MarketData15Min(Base):
+    __tablename__ = "market_data_15_min"
     __table_args__ = {"info": {"is_hypertable": True, "hypertable_interval": "15 minute"}}
 
     id = Column(Integer, primary_key=True, index=True)
