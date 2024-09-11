@@ -1,17 +1,23 @@
-from sqlalchemy import Column, Integer, Float, DateTime
-from .base import Base
+from sqlalchemy import Column, Integer, Float, DateTime, CheckConstraint
+from src.models.base import Base
 
 
-class MarketData15Min(Base):
-    __tablename__ = "market_data_15_min"
-    __table_args__ = {"info": {"is_hypertable": True, "hypertable_interval": "15 minute"}}
+class OHLCV15Data(Base):
+    __tablename__ = "ohlcv_15_data"
 
     id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime(timezone=True), index=True)
-    price_usd = Column(Float)
-    market_cap = Column(Float)
-    volume_24h = Column(Float)
-    price_change_24h = Column(Float)
+    timestamp = Column(DateTime(timezone=True), index=True, unique=True)
+    open = Column(Float, nullable=False)
+    high = Column(Float, nullable=False)
+    low = Column(Float, nullable=False)
+    close = Column(Float, nullable=False)
+    volume = Column(Float, nullable=False)
+    price_change = Column(Float, nullable=False)
+
+    __table_args__ = (
+        CheckConstraint('high >= low', name='check_high_low'),
+        {"info": {"is_hypertable": True, "hypertable_interval": "15 minute"}},
+    )
 
     def __repr__(self):
-        return f"<MarketData(id={self.id}, timestamp={self.timestamp}, price_usd={self.price_usd})>"
+        return f'<OHLCV15Data(id={self.id}, timestamp={self.timestamp}, close={self.close})>'
