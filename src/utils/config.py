@@ -26,7 +26,7 @@ def load_config():
     config['data_collection']['interval_seconds'] = config['data_collection'].get('interval_minutes', 15) * 60
 
     # Add additional configuration variables below as the project expands
-    config['database_url'] = os.getenv('DATABASE_URL')  # Postgres credentials
+    config['database']['url'] = os.getenv('DATABASE_URL')  # Postgres credentials
 
     return config
 

@@ -7,9 +7,9 @@ sys.path.append(project_root)
 
 from sqlalchemy import create_engine, text
 from src.models.base import Base
-from src.models.ohlcv_data_15_min import OHLCV15Data
+from src.models.ohlcv_data_15_min import OHLCVData15Min
 from src.models.market_data_15_min import MarketData15Min
-from src.models.technical_indicators import TechnicalIndicators
+from src.models.technical_indicators_15_min import TechnicalIndicators15Min
 from src.utils.config import config
 
 

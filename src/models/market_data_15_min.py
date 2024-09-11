@@ -13,9 +13,6 @@ class MarketData15Min(Base):
     total_supply = Column(Float, nullable=False)
     max_supply = Column(Float, nullable=True)
 
-    __table_args__ = (
-        {"info": {"is_hypertable": True, "hypertable_interval": "15 minute"}},
-    )
 
     def __repr__(self):
         return f'<MarketData15Min(id={self.id}, timestamp={self.timestamp}, price_usd={self.price_usd})>'

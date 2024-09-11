@@ -19,9 +19,5 @@ class TechnicalIndicators15Min(Base):
     sma_50 = Column(Float)
     sma_200 = Column(Float)
 
-    __table_args__ = (
-        {"info": {"is_hypertable": True, "hypertable_interval": "15 minute"}},
-    )
-
     def __repr__(self):
         return f'<TechnicalIndicators(id={self.id}, timestamp={self.timestamp})>'

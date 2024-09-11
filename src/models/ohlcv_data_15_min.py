@@ -16,7 +16,6 @@ class OHLCVData15Min(Base):
 
     __table_args__ = (
         CheckConstraint('high >= low', name='check_high_low'),
-        {"info": {"is_hypertable": True, "hypertable_interval": "15 minute"}},
     )
 
     def __repr__(self):
