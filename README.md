@@ -177,14 +177,6 @@ from src.constants import XRP_ID, MAX_CONTENT_LENGTH
 def fetch_xrp_data():
     return coingecko_client.get_coin_data(XRP_ID)
 ```
-
-```
-from src.constants import XRP_ID, MAX_CONTENT_LENGTH
-
-# Example usage
-def fetch_xrp_data():
-    return coingecko_client.get_coin_data(XRP_ID)
-```
 For a complete list of constants and their usage, please refer to the constants documentation.
 ## Database Models
 

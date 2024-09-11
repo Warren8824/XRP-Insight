@@ -3,8 +3,8 @@ from .base import Base
 
 
 class MarketData(Base):
-    __tablename__ = "market_data"
-    __table_args__ = {"info": {"is_hypertable": True, "hypertable_interval": "1 day"}}
+    __tablename__ = "market_15_data"
+    __table_args__ = {"info": {"is_hypertable": True, "hypertable_interval": "15 minute"}}
 
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime(timezone=True), index=True)

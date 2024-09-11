@@ -5,7 +5,6 @@ from src.models.base import Base
 class OHLCV15Data(Base):
     __tablename__ = "ohlcv_15_data"
 
-
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime(timezone=True), index=True, unique=True)
     open = Column(Float, nullable=False)
@@ -17,6 +16,7 @@ class OHLCV15Data(Base):
 
     __table_args__ = (
         CheckConstraint('high >= low', name='check_high_low'),
+        {"info": {"is_hypertable": True, "hypertable_interval": "15 minute"}},
     )
 
     def __repr__(self):
