@@ -1,6 +1,6 @@
 import schedule
-
 import time
+
 from src.data_collection.collector import run_data_collection
 from src.models.base import SessionLocal
 from src.utils.logger import utils_logger as logger
