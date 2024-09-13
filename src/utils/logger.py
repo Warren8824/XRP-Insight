@@ -10,7 +10,7 @@ def setup_logger(name, log_directory, file_level=logging.INFO, console_level=log
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)  # Set to lowest level to catch all logs
 
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     # Create environment-specific log file without timestamp
     env: str = os.getenv('APP_ENV', 'development')
