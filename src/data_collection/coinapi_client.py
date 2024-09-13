@@ -1,4 +1,6 @@
 import requests
+
+from src.utils.logger import data_collection_logger
 from src.utils.config import config
 
 
@@ -16,9 +18,15 @@ class CoinAPIClient:
         }
         headers = {"X-CoinAPI-Key": self.api_key}
 
-        response = requests.get(endpoint, params=params, headers=headers)
-        response.raise_for_status()
-        return response.json()
+        self.logger.info(f"Requesting OHLCV data from endpoint: {endpoint}")
+
+        try:
+            response = requests.get(endpoint, params=params, headers=headers)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"Error retrieving OHLCV data: {str(e)}")
+            raise
 
     def get_historical_ohlcv_data(self, start_time, end_time=None, limit=config['api_limits']['coinapi_daily']):
         endpoint = f"{self.base_url}/ohlcv/BITSTAMP_SPOT_XRP_USD/history"
@@ -32,6 +40,13 @@ class CoinAPIClient:
 
         headers = {"X-CoinAPI-Key": self.api_key}
 
-        response = requests.get(endpoint, params=params, headers=headers)
-        response.raise_for_status()
-        return response.json()
+        self.logger.info(f"Requesting historical OHLCV data from endpoint: {endpoint}")
+        self.logger.info(f"Parameters: {params}")
+        try:
+            response = requests.get(endpoint, params=params, headers=headers)
+            response.raise_for_status()
+            self.logger.info("Successfully retrieved historical OHLCV data")
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"Error retrieving historical OHLCV data: {str(e)}")
+            raise
