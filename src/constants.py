@@ -4,4 +4,3 @@ MAX_TWEET_LENGTH = 280
 MAX_TOKENS = 100  # Maximum number of tokens for OpenAI API response.
 
 # Default values (Can be overridden in configuration.yaml).
-
