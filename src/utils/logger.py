@@ -1,7 +1,9 @@
+from dotenv import load_dotenv
+
 import os
 import logging
 from logging.handlers import RotatingFileHandler
-from dotenv import load_dotenv
+
 
 load_dotenv()  # Load environment variables from .env
 
@@ -17,14 +19,11 @@ def setup_logger(name, log_directory, file_level=logging.INFO, console_level=log
     env = os.getenv('APP_ENV', 'development')
     log_file = os.path.join(log_directory, f'{name}_{env}.log')
 
-    try:
-        # File Handler
-        file_handler = RotatingFileHandler(log_file, maxBytes=10 * 1024 * 1024, backupCount=5)
-        file_handler.setFormatter(formatter)
-        file_handler.setLevel(file_level)
-        logger.addHandler(file_handler)
-    except Exception as e:
-        print(f"Failed to set up file handler for {name}: {e}")
+    # File Handler
+    file_handler = RotatingFileHandler(log_file, maxBytes=10 * 1024 * 1024, backupCount=5)
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(file_level)
+    logger.addHandler(file_handler)
 
     # Console Handler
     console_handler = logging.StreamHandler()
@@ -36,6 +35,7 @@ def setup_logger(name, log_directory, file_level=logging.INFO, console_level=log
     return logger
 
 
+# Configure the loggers and expose them for import
 def configure_loggers():
     """Configures all loggers for the application."""
     log_directory = 'logs'
@@ -54,23 +54,29 @@ def configure_loggers():
         file_level = logging.DEBUG
         console_level = logging.DEBUG
 
-    loggers = {
-        'ai_integration': file_level,
-        'analysis': file_level,
-        'api': file_level,
-        'content_generation': file_level,
-        'data_collection': file_level,
-        'data_processing': file_level,
-        'models': file_level,
-        'scheduler': file_level,
-        'utils': file_level
+    return {
+        'ai_integration': setup_logger('ai_integration', log_directory, file_level, console_level),
+        'analysis': setup_logger('analysis', log_directory, file_level, console_level),
+        'api': setup_logger('api', log_directory, file_level, console_level),
+        'content_generation': setup_logger('content_generation', log_directory, file_level, console_level),
+        'data_collection': setup_logger('data_collection', log_directory, file_level, console_level),
+        'data_processing': setup_logger('data_processing', log_directory, file_level, console_level),
+        'models': setup_logger('models', log_directory, file_level, console_level),
+        'scheduler': setup_logger('scheduler', log_directory, file_level, console_level),
+        'utils': setup_logger('utils', log_directory, file_level, console_level),
     }
 
-    for name, level in loggers.items():
-        setup_logger(name, log_directory, file_level=level, console_level=console_level)
 
-
-# Initialize all loggers
 if __name__ == "__main__":
-    configure_loggers()
+    # Initialize all loggers and expose them globally
+    loggers = configure_loggers()
 
+    ai_integation_logger = loggers['ai_integration']
+    analysis_logger = loggers['analysis']
+    api_logger = loggers['api']
+    content_generation_logger = loggers['content_generation']
+    data_collection_logger = loggers['data_collection']
+    data_processing_logger = loggers['data_processing']
+    models_logger = loggers['models']
+    scheduler_logger = loggers['scheduler']
+    utils_logger = loggers['utils']
