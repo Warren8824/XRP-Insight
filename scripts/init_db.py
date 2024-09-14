@@ -1,5 +1,4 @@
 from sqlalchemy import create_engine, text, inspect
-
 import os
 import sys
 
@@ -16,12 +15,21 @@ def init_db():
     engine = create_engine(config['database']['url'])
     inspector = inspect(engine)
 
-    # Create TimescaleDB extension
+    # Check if any tables exist in the database
+    existing_tables = inspector.get_table_names()
+
+    if existing_tables:
+        scripts_logger.info(f"Existing tables found: {existing_tables}. Dropping all tables.")
+        Base.metadata.drop_all(engine)
+        scripts_logger.info("All tables dropped successfully.")
+
+    # Create TimescaleDB extension if it doesn't exist
     with engine.connect() as conn:
         conn.execute(text("CREATE EXTENSION IF NOT EXISTS timescaledb"))
 
     # Create tables
     Base.metadata.create_all(engine)
+    scripts_logger.info("All tables created successfully.")
 
     # Convert tables to hypertables
     with engine.connect() as conn:
@@ -35,10 +43,11 @@ def init_db():
             if table_name in inspector.get_table_names():
                 try:
                     conn.execute(text(
-                        f"SELECT create_hypertable('{table_name}', '{time_column}', if_not_exists => TRUE, chunk_time_interval => INTERVAL '1 hour', migrate_data => TRUE)"))
+                        f"SELECT create_hypertable('{table_name}', '{time_column}', if_not_exists => TRUE, chunk_time_interval => INTERVAL '1 hour', migrate_data => TRUE)"
+                    ))
                     scripts_logger.info(f"Created hypertable for {table_name}")
                 except Exception as e:
-                    scripts_logger.error(f"Error creating hypertable for {table_name}: {str(e)}")
+                    scripts_logger.error(f"Error creating hypertable for {table_name}: {str(e)}", exc_info=True)
             else:
                 scripts_logger.warning(f"Table {table_name} does not exist")
 

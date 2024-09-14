@@ -3,6 +3,9 @@ from dotenv import load_dotenv
 
 import os
 
+from src.utils.logger import utils_logger
+
+
 load_dotenv()  # Load environment variables from .env file
 
 
