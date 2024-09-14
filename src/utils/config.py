@@ -36,7 +36,7 @@ def load_config():
         config['database']['url'] = os.getenv('DATABASE_URL')  # Postgres credentials
 
         # Log the final configuration if necessary (be careful with sensitive data)
-        utils_logger.debug(f"Final configuration: {config}")
+        #utils_logger.debug(f"Final configuration: {config}")
 
     except FileNotFoundError as e:
         utils_logger.error(f"Configuration file not found: {e}")
