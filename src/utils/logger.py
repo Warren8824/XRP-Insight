@@ -55,7 +55,7 @@ def configure_loggers():
         console_level = logging.DEBUG
 
     loggers = {
-        'ai_intergration': file_level,
+        'ai_integration': file_level,
         'analysis': file_level,
         'api': file_level,
         'content_generation': file_level,
