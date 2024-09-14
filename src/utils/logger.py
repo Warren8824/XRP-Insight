@@ -64,6 +64,7 @@ def configure_loggers():
         'models': setup_logger('models', log_directory, file_level, console_level),
         'scheduler': setup_logger('scheduler', log_directory, file_level, console_level),
         'utils': setup_logger('utils', log_directory, file_level, console_level),
+        'scripts': setup_logger('scripts', log_directory, file_level, console_level),
     }
 
 
@@ -71,7 +72,7 @@ if __name__ == "__main__":
     # Initialize all loggers and expose them globally
     loggers = configure_loggers()
 
-    ai_integation_logger = loggers['ai_integration']
+    ai_integration_logger = loggers['ai_integration']
     analysis_logger = loggers['analysis']
     api_logger = loggers['api']
     content_generation_logger = loggers['content_generation']
@@ -80,3 +81,4 @@ if __name__ == "__main__":
     models_logger = loggers['models']
     scheduler_logger = loggers['scheduler']
     utils_logger = loggers['utils']
+    scripts_logger = loggers['scripts']
