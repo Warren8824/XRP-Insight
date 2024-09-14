@@ -13,7 +13,7 @@ def load_config():
     config = {}
     try:
         # Load YAML configuration
-        with open("config/config.yaml", "r") as config_file:
+        with open("config/config.yml", "r") as config_file:
             config = yaml.safe_load(config_file)
         utils_logger.info("Loaded configuration from YAML file.")
 
