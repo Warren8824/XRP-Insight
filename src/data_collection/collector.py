@@ -1,5 +1,6 @@
 import requests
 from sqlalchemy.orm import Session
+
 from datetime import datetime, timezone, timedelta
 
 from src.data_collection.coingecko_client import CoinGeckoClient
@@ -11,8 +12,8 @@ from src.models.ohlcv_data_15_min import OHLCVData15Min
 coingecko_client = CoinGeckoClient()
 coinapi_client = CoinAPIClient()
 
-# No need to re-import config or logger since they're from the shared __init__.py
-logger = data_collection_logger  # Uses logger from __init__.py
+# Initialize logger
+logger = data_collection_logger
 
 
 def collect_and_store_market_data(db: Session):
