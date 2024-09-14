@@ -1,3 +1,5 @@
+from sqlalchemy import create_engine, text, inspect
+
 import os
 import sys
 
@@ -5,7 +7,7 @@ import sys
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
-from sqlalchemy import create_engine, text, inspect
+from src.utils.logger import scripts_logger
 from src.models import Base, MarketData15Min, OHLCVData15Min, TechnicalIndicators15Min
 from src.utils.config import config
 
@@ -34,13 +36,28 @@ def init_db():
                 try:
                     conn.execute(text(
                         f"SELECT create_hypertable('{table_name}', '{time_column}', if_not_exists => TRUE, chunk_time_interval => INTERVAL '1 hour', migrate_data => TRUE)"))
-                    print(f"Created hypertable for {table_name}")
+                    scripts_logger.info(f"Created hypertable for {table_name}")
                 except Exception as e:
-                    print(f"Error creating hypertable for {table_name}: {str(e)}")
+                    scripts_logger.error(f"Error creating hypertable for {table_name}: {str(e)}")
             else:
-                print(f"Table {table_name} does not exist")
+                scripts_logger.warning(f"Table {table_name} does not exist")
+
+
+def main():
+    scripts_logger.info("Starting database initialization script.")
+
+    try:
+        # Initialize the database
+        scripts_logger.info("Initializing the database...")
+        init_db()
+        scripts_logger.info("Database initialized successfully.")
+
+    except Exception as e:
+        scripts_logger.error(f"Error during database initialization: {e}", exc_info=True)
+
+    finally:
+        scripts_logger.info("Database initialization script finished.")
 
 
 if __name__ == "__main__":
-    init_db()
-    print("Database initialization process completed.")
+    main()
