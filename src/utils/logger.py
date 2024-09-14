@@ -1,12 +1,9 @@
 from dotenv import load_dotenv
-
 import os
 import logging
 from logging.handlers import RotatingFileHandler
 
-
 load_dotenv()  # Load environment variables from .env
-
 
 def setup_logger(name, log_directory, file_level=logging.INFO, console_level=logging.WARNING):
     """Sets up a logger with both file and console handlers."""
@@ -31,11 +28,9 @@ def setup_logger(name, log_directory, file_level=logging.INFO, console_level=log
     console_handler.setLevel(console_level)
     logger.addHandler(console_handler)
 
-    logger.info(f"Logging initialized for environment: {env}")
+    logger.debug(f"Logging initialized for environment: {env}")
     return logger
 
-
-# Configure the loggers and expose them for import
 def configure_loggers():
     """Configures all loggers for the application."""
     log_directory = 'logs'
@@ -67,18 +62,31 @@ def configure_loggers():
         'scripts': setup_logger('scripts', log_directory, file_level, console_level),
     }
 
+# Use a global variable to track if loggers have been initialized
+
+
+loggers = None
+
+
+def get_loggers():
+    global loggers
+    if loggers is None:
+        loggers = configure_loggers()
+    return loggers
+
+# Initialize and expose loggers globally
+loggers = get_loggers()
+ai_integration_logger = loggers['ai_integration']
+analysis_logger = loggers['analysis']
+api_logger = loggers['api']
+content_generation_logger = loggers['content_generation']
+data_collection_logger = loggers['data_collection']
+data_processing_logger = loggers['data_processing']
+models_logger = loggers['models']
+scheduler_logger = loggers['scheduler']
+utils_logger = loggers['utils']
+scripts_logger = loggers['scripts']
 
 if __name__ == "__main__":
-    # Initialize all loggers and expose them globally
-    loggers = configure_loggers()
+    print("Loggers initialized successfully")
 
-    ai_integration_logger = loggers['ai_integration']
-    analysis_logger = loggers['analysis']
-    api_logger = loggers['api']
-    content_generation_logger = loggers['content_generation']
-    data_collection_logger = loggers['data_collection']
-    data_processing_logger = loggers['data_processing']
-    models_logger = loggers['models']
-    scheduler_logger = loggers['scheduler']
-    utils_logger = loggers['utils']
-    scripts_logger = loggers['scripts']
