@@ -49,8 +49,8 @@ else:  # development
     file_level = logging.DEBUG
     console_level = logging.DEBUG
 
-ai_analysis_logger = setup_logger(
-    name='ai_analysis',
+ai_intergration_logger = setup_logger(
+    name='ai_intergration',
     log_directory=log_directory,
     file_level=file_level,
     console_level=console_level
@@ -67,8 +67,20 @@ api_logger = setup_logger(
     file_level=file_level,
     console_level=console_level
 )
+content_generation_logger = setup_logger(
+    name='content_generation',
+    log_directory=log_directory,
+    file_level=file_level,
+    console_level=console_level
+)
 data_collection_logger = setup_logger(
-    name='data_collecion_analysis',
+    name='data_collection',
+    log_directory=log_directory,
+    file_level=file_level,
+    console_level=console_level
+)
+data_processing_logger = setup_logger(
+    name='data_processing',
     log_directory=log_directory,
     file_level=file_level,
     console_level=console_level
@@ -79,8 +91,8 @@ models_logger = setup_logger(
     file_level=file_level,
     console_level=console_level
 )
-tweet_generation_logger = setup_logger(
-    name='tweet_generation',
+scheduler_logger = setup_logger(
+    name='scheduler',
     log_directory=log_directory,
     file_level=file_level,
     console_level=console_level
