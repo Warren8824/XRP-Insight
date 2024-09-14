@@ -21,17 +21,18 @@ class OHLCVData15Min(Base):
         return f'<OHLCV15Data(id={self.id}, timestamp={self.timestamp}, close={self.close})>'
 
     @validates('open', 'high', 'low', 'close', 'volume', 'price_change')
-    def validate_positive(self, key, value):
+    def validate_fields(self, key, value):
+        # Check for negative values
         if value < 0:
             models_logger.warning(f"Attempted to set negative {key}: {value}")
-        return value
 
-    @validates('high', 'low')
-    def validate_high_low(self, key, value):
-        if key == 'high' and value < self.low:
-            models_logger.warning(f"High value {value} is less than low value {self.low}")
-        if key == 'low' and value > self.high:
-            models_logger.warning(f"Low value {value} is greater than high value {self.high}")
+        # Special checks for 'high' and 'low'
+        if key in ['high', 'low']:
+            if key == 'high' and hasattr(self, 'low') and value < self.low:
+                models_logger.warning(f"High value {value} is less than low value {self.low}")
+            elif key == 'low' and hasattr(self, 'high') and value > self.high:
+                models_logger.warning(f"Low value {value} is greater than high value {self.high}")
+
         return value
 
 @event.listens_for(OHLCVData15Min, 'after_insert')
