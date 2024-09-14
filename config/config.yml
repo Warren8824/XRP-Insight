@@ -8,9 +8,6 @@ twitter_bot:
     post_interval_hours: 3
     max_tweets_per_days: 24
 
-logging:
-    level: INFO
-    file: logs/xrp_insight.log
 
 api_endpoints:
     coingecko: https://api.coingecko.com/api/v3
