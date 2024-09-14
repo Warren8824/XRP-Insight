@@ -1,3 +1,4 @@
+from src.utils.logger import models_logger
 from .base import Base
 from .market_data_15_min import MarketData15Min
 from .ohlcv_data_15_min import OHLCVData15Min
