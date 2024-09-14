@@ -1,14 +1,12 @@
 import requests
 
-from src.utils.logger import data_collection_logger
-from src.utils.config import config
-
 
 class CoinAPIClient:
     def __init__(self):
         self.base_url = config['api_endpoints']['coinapi']
         self.api_key = config['api_keys']['coinapi']
         self.daily_limit = config['api_limits']['coinapi_daily']
+        self.logger = data_collection_logger
 
     def get_ohlcv_data(self):
         endpoint = f"{self.base_url}/ohlcv/BITSTAMP_SPOT_XRP_USD/latest"

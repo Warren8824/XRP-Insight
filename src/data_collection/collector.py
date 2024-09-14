@@ -1,20 +1,23 @@
+import requests
 from sqlalchemy.orm import Session
-
 from datetime import datetime, timezone, timedelta
 
 from src.data_collection.coingecko_client import CoinGeckoClient
 from src.data_collection.coinapi_client import CoinAPIClient
 from src.models.market_data_15_min import MarketData15Min
 from src.models.ohlcv_data_15_min import OHLCVData15Min
-from src.utils.config import config
-from src.utils.logger import data_collection_logger as logger
 
+# Initialize clients
 coingecko_client = CoinGeckoClient()
 coinapi_client = CoinAPIClient()
+
+# No need to re-import config or logger since they're from the shared __init__.py
+logger = data_collection_logger  # Uses logger from __init__.py
 
 
 def collect_and_store_market_data(db: Session):
     try:
+        logger.info("Collecting XRP market data from CoinGecko...")
         market_data = coingecko_client.get_xrp_data()
 
         # Convert the timestamp to a datetime object
@@ -36,14 +39,15 @@ def collect_and_store_market_data(db: Session):
     except Exception as e:
         db.rollback()
         logger.error(f"Error collecting market data: {str(e)}")
+        raise
 
 
 def collect_and_store_ohlcv_data(db: Session):
     try:
+        logger.info("Collecting XRP OHLCV data from CoinAPI...")
         ohlcv_data = coinapi_client.get_ohlcv_data()
 
         for candle in ohlcv_data:
-            # Parse the ISO 8601 timestamp
             timestamp = datetime.fromisoformat(candle['time_period_start'].rstrip('Z')).replace(tzinfo=timezone.utc)
 
             new_ohlcv = OHLCVData15Min(
@@ -63,11 +67,14 @@ def collect_and_store_ohlcv_data(db: Session):
     except Exception as e:
         db.rollback()
         logger.error(f"Error collecting OHLCV data: {str(e)}")
+        raise
 
 
 def collect_historical_data(db: Session, start_date: datetime, end_date: datetime):
     try:
         current_date = start_date
+        logger.info(f"Collecting historical OHLCV data from {start_date} to {end_date}...")
+
         while current_date < end_date:
             next_date = min(current_date + timedelta(days=1), end_date)
             ohlcv_data = coinapi_client.get_historical_ohlcv_data(current_date, next_date)
@@ -93,11 +100,17 @@ def collect_historical_data(db: Session, start_date: datetime, end_date: datetim
     except Exception as e:
         db.rollback()
         logger.error(f"Error collecting historical data: {str(e)}")
+        raise
 
 
 def run_data_collection(db: Session):
-    collect_and_store_market_data(db)
-    collect_and_store_ohlcv_data(db)
+    try:
+        logger.info("Starting data collection process...")
+        collect_and_store_market_data(db)
+        collect_and_store_ohlcv_data(db)
+        logger.info("Data collection completed successfully.")
+    except Exception as e:
+        logger.error(f"Error in data collection process: {str(e)}")
 
 
 if __name__ == "__main__":
@@ -108,3 +121,4 @@ if __name__ == "__main__":
         run_data_collection(db)
     finally:
         db.close()
+        logger.info("Database connection closed.")
