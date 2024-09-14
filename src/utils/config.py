@@ -1,8 +1,10 @@
-import os
 import yaml
 from dotenv import load_dotenv
 
+import os
+
 load_dotenv()  # Load environment variables from .env file
+
 
 def load_config():
     config = {}
