@@ -7,6 +7,7 @@ from src.data_collection.coingecko_client import CoinGeckoClient
 from src.data_collection.coinapi_client import CoinAPIClient
 from src.models.market_data_15_min import MarketData15Min
 from src.models.ohlcv_data_15_min import OHLCVData15Min
+from ..utils.logger import data_collection_logger
 
 # Initialize clients
 coingecko_client = CoinGeckoClient()

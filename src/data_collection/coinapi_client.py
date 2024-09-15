@@ -1,5 +1,6 @@
 import requests
 from ..utils.config import config
+from ..utils.logger import data_collection_logger
 
 class CoinAPIClient:
     def __init__(self):
