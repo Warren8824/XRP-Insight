@@ -1,6 +1,3 @@
-database:
-    url: ${DATABASE_URL}
-
 data_collection:
     interval_minutes: 15
 
