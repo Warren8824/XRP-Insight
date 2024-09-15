@@ -1,5 +1,3 @@
-import os
-import sys
 from sqlalchemy import create_engine, text, inspect
 from sqlalchemy.exc import OperationalError
 import psycopg2

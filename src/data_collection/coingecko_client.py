@@ -1,5 +1,5 @@
 import requests
-
+from ..utils.config import config
 
 class CoinGeckoClient:
     def __init__(self):

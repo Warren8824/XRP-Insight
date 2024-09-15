@@ -1,5 +1,5 @@
 import requests
-
+from ..utils.config import config
 
 class CoinAPIClient:
     def __init__(self):

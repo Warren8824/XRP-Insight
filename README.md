@@ -98,7 +98,8 @@ xrp_insight/
 ```
 ## Setup
 
-1. Clone the repository: `git clone https://github.com/Warren8824/xrp_insight.git`
+1. Clone the repository: 
+`git clone https://github.com/Warren8824/xrp_insight.git`
 `cd xrp_insight`
 
 2. Create a virtual environment and activate it: `python -m venv venv`
@@ -106,11 +107,7 @@ xrp_insight/
 
 3. Install the required packages: `pip install -r requirements.txt`
 
-4. Set up TimescaleDB:
-Install TimescaleDB on your system or use the provided Docker configuration.
-Create a database for the project.
-
-5. Create a `.env` file in the project root and add your API keys and database connection string: 
+4. Create a `.env` file in the project root and add your API keys and database connection string: 
 ```
 COINGECKO_API_KEY=your_coingecko_api_key
 COINAPI_API_KEY=your_coinapi_api_key
@@ -118,12 +115,9 @@ OPENAI_API_KEY=your_openai_api_key
 DATABASE_URL=postgresql://username:password@localhost:5432/xrp_insight
 APP_ENV=development # Set this to development/staging/production
 ```
-6. Update the `config/config.yaml` file with your desired configuration:
+5. Update the `config/config.yaml` file with your desired configuration:
 
 ```yaml
-database:
-  url: ${DATABASE_URL}
-
 data_collection:
   interval_minutes: 15
 
@@ -139,9 +133,9 @@ api_endpoints:
   coingecko: https://api.coingecko.com/api/v3
   coinapi: https://rest.coinapi.io/v1
 ```
-7. Initialize the database: `python scripts/init_db.py`
+6. Initialize the database: `python scripts/init_db.py`
 
-8. (Optional) Run the data backfill script to populate historical data: `python scripts/data_backfill.py`
+7. (Optional) Run the data backfill script to populate historical data: `python scripts/data_backfill.py`
 
 ## Running the Application
 
