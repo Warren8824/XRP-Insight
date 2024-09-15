@@ -6,6 +6,7 @@ from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql.ddl import CreateTable
 
 from src.utils.config import config
+from src.utils.logger import models_logger
 
 # Config settings
 SQLALCHEMY_DATABASE_URL = config['database']['url']
