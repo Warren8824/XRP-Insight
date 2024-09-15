@@ -1,10 +1,8 @@
 import yaml
 from dotenv import load_dotenv
-
 import os
-
+from urllib.parse import urlparse
 from src.utils.logger import utils_logger
-
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -33,10 +31,24 @@ def load_config():
 
         # Update configuration with environment variables
         config['data_collection']['interval_seconds'] = config['data_collection'].get('interval_minutes', 15) * 60
-        config['database']['url'] = os.getenv('DATABASE_URL')  # Postgres credentials
+
+        # Parse DATABASE_URL
+        db_url = os.getenv('DATABASE_URL')
+        if db_url:
+            parsed_url = urlparse(db_url)
+            config['database'] = {
+                'url': db_url,
+                'host': parsed_url.hostname,
+                'port': parsed_url.port,
+                'user': parsed_url.username,
+                'password': parsed_url.password,
+                'dbname': parsed_url.path[1:]  # Remove leading '/'
+            }
+        else:
+            utils_logger.error("DATABASE_URL not found in environment variables.")
 
         # Log the final configuration if necessary (be careful with sensitive data)
-        #utils_logger.debug(f"Final configuration: {config}")
+        # utils_logger.debug(f"Final configuration: {config}")
 
     except FileNotFoundError as e:
         utils_logger.error(f"Configuration file not found: {e}")
