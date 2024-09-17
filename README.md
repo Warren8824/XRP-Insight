@@ -191,6 +191,7 @@ For a complete list of constants and their usage, please refer to the constants 
 ## Database Models
 
 XRP Insight uses TimescaleDB (a PostgreSQL extension) for efficient time-series data management. The base configuration for all database models is defined in src/models/base.py.
+
 Key features:
 
 TimescaleDB for time-series data management
@@ -216,7 +217,9 @@ For detailed information about the database setup, model creation, and initializ
 ## Continuous Integration
 
 This project uses GitHub Actions for continuous integration. The workflow is defined in .github/workflows/ci.yaml. It automatically runs tests and checks code quality on every push and pull request.
-Usage
+
+## Usage
+
 XRP Insight automatically collects data, performs analysis, and generates content based on the configured intervals. You can monitor the application logs for information about its operations.
 For detailed API documentation and usage examples, please refer to the API Integration documentation.
 ## Logging
