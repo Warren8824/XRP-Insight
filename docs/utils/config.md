@@ -1,45 +1,48 @@
-# Configuration Utility
+# config.py
 
-The configuration utility manages the application's configuration, combining settings from a YAML file and environment variables.
+This file is responsible for loading and managing the configuration settings for the XRP Insight project.
 
-## Key Features
+## Functions
 
-- Loads configuration from a YAML file (`config/config.yml`)
-- Incorporates sensitive information from environment variables
-- Provides a centralized configuration object
+### load_config()
+
+This function loads the configuration from a YAML file and environment variables.
+
+#### Process:
+1. Loads the YAML configuration from `config/config.yml`.
+2. Merges API keys from environment variables.
+3. Calculates the data collection interval in seconds.
+4. Parses the DATABASE_URL environment variable.
+
+#### Returns:
+A dictionary containing the full configuration.
+
+## Key Components
+
+- Uses `yaml` for parsing the YAML configuration file.
+- Uses `dotenv` to load environment variables from a `.env` file.
+- Parses the `DATABASE_URL` to extract database connection details.
+- Logs configuration loading process and any errors.
+
+## Configuration Structure
+
+The final configuration dictionary includes:
+- API keys for various services (CoinGecko, CoinAPI, Twitter, OpenAI)
+- Database connection details
+- Data collection settings
 
 ## Usage
-
-To use the configuration in your code:
 
 ```python
 from src.utils.config import config
 
-database_url = config['database']['url']
-coinapi_key = config['api_keys']['coinapi']
+# Access configuration values
+coingecko_api_key = config['api_keys']['coingecko']
+db_host = config['database']['host']
 ```
 
-Configuration Structure
-The configuration object includes:
+## Notes
 
-*API keys for various services (CoinGecko, CoinAPI, Twitter, OpenAI)
-*Database connection URL
-*Data collection interval
-*Other application-specific settings
-
-Environment Variables
-The following environment variables are used:
-
-*COINGECKO_API_KEY
-*COINAPI_API_KEY
-*TWITTER_CONSUMER_KEY
-*TWITTER_CONSUMER_SECRET
-*TWITTER_ACCESS_TOKEN
-*TWITTER_ACCESS_TOKEN_SECRET
-*OPENAI_API_KEY
-*DATABASE_URL
-*APP_ENV
-
-Ensure these are set in your `.env` file or in your environment.
-Customization
-To add new configuration options, modify the `load_config` function in `src/utils/config.py` and update the `config/config.yml` file as needed.
+- Ensure that the config/config.yml file exists and is properly formatted.
+- Set up a .env file with necessary environment variables (API keys, DATABASE_URL, etc.).
+- Be cautious about logging sensitive information (API keys, database credentials).
