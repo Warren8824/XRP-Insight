@@ -59,6 +59,7 @@ xrp-insight/
 ├── requirements.txt
 ├── docker-compose.yml
 └── README.md
+└── ROADMAP.md
 ```
 
 ## Getting Started
@@ -87,7 +88,7 @@ xrp-insight/
 
 ## Roadmap
 
-- [x] Phase 1 Development - In Progress
+- [x] Phase 1 Development - In Progress - see [ROADMAP.md](ROADMAP.md) for our current plans.
 - [ ] Implement advanced technical indicators
 - [ ] Develop AI-driven content generation system
 - [ ] Create API for data access
@@ -96,7 +97,7 @@ xrp-insight/
 
 ## Contributing
 
-We welcome contributions from developers of all skill levels! This is my first big project, and I'm excited to collaborate with others who are passionate about cryptocurrency analysis and AI.
+We welcome contributions from developers of all skill levels! This is my first big project, and I'm excited to collaborate with others who are passionate about cryptocurrency analysis and AI. Check out the [ROADMAP](ROADMAP.md), to see the long list of tasks we intend on tackling in the coming phases.
 
 To contribute:
 
