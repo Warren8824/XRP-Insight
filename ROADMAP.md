@@ -29,9 +29,11 @@ This roadmap outlines the planned development phases for XRP Insight. Please not
 ## Phase 3: Advanced AI and Content Generation
 
 - [ ] Develop more sophisticated AI prompts for varied content types
+- [ ] Implementation of blockchain and other features (e.g., on-chain data analysis, recent news)
 - [ ] Implement an evolving AI persona with persistent memory
 - [ ] Create a system for AI self-improvement suggestions
 - [ ] Develop multi-format content generation (articles, social media posts)
+- [ ] Develop content posting abilities and scheduler
 - [ ] Implement sentiment analysis from external sources
 - [ ] Create a basic web interface for content management
 - [ ] Enhance data visualization capabilities
@@ -61,6 +63,5 @@ This roadmap outlines the planned development phases for XRP Insight. Please not
 - Integration with popular trading platforms
 - Real-time alerts and notifications system
 - Advanced natural language processing for news analysis
-- Implementation of blockchain-based features (e.g., on-chain data analysis)
 
 We welcome community input on this roadmap. Please feel free to open an issue to discuss any suggestions or ideas you may have for the project's direction.
