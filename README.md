@@ -126,5 +126,7 @@ This project is for educational and research purposes only. It is not intended t
 
 XRP Insight is currently in active development. Stay tuned for updates and feel free to star the repo if you're interested in following its progress!
 
-Warren Bebbington - @your_twitter - warrenbebbington88@gmail.com
-Project Link: https://github.com/Warren8824/xrp_insight
+Warren Bebbington 
+- @your_twitter 
+- warrenbebbington88@gmail.com
+- Project Link: https://github.com/Warren8824/xrp_insight
