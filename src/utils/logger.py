@@ -60,7 +60,6 @@ def configure_loggers():
         'scheduler': setup_logger('scheduler', log_directory, file_level, console_level),
         'utils': setup_logger('utils', log_directory, file_level, console_level),
         'scripts': setup_logger('scripts', log_directory, file_level, console_level),
-        'scheduler': scheduler_logger('scheduler', log_directory, file_level, console_level),
     }
 
 # Use a global variable to track if loggers have been initialized
@@ -87,7 +86,7 @@ models_logger = loggers['models']
 scheduler_logger = loggers['scheduler']
 utils_logger = loggers['utils']
 scripts_logger = loggers['scripts']
-scheduler_logger = loggers['scheduler']
+
 
 if __name__ == "__main__":
     print("Loggers initialized successfully")
