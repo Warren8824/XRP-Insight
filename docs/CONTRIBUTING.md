@@ -20,7 +20,7 @@ We welcome all contributions and are excited to work together to improve the pro
 6. [Roadmap](#roadmap)
 
 ## Code of Conduct
-We ask that all contributors adhere to our project's [Code of Conduct](CODE_OF_CONDUCT.md). It’s important to respect others, stay positive, and foster a collaborative and welcoming environment.
+We ask that all contributors adhere to our project's [Code of Conduct](../CODE_OF_CONDUCT.md). It’s important to respect others, stay positive, and foster a collaborative and welcoming environment.
 
 ## How to Contribute
 
@@ -101,6 +101,6 @@ Here are some resources that might be helpful when contributing:
 ---
 
 ## Roadmap
-Check out the project's **Roadmap** to see the planned features and phases of development. You can find the roadmap [here](docs/ROADMAP.md).
+Check out the project's **Roadmap** to see the planned features and phases of development. You can find the roadmap [here](ROADMAP.md).
 
 Feel free to pick up tasks from Phase 1 to get started. Contributions are welcome at every step!
