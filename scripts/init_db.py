@@ -3,13 +3,22 @@ from sqlalchemy.exc import OperationalError
 import psycopg2
 from psycopg2 import sql
 
+import os
+import sys
 # Add the project root directory to the Python path
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
 from src.utils.logger import scripts_logger
-from src.models import Base, MarketData15Min, OHLCVData15Min, TechnicalIndicators15Min
 from src.utils.config import config
+from src.models import get_models
+
+# Setup model instances
+models = get_models()
+Base = models['Base']
+MarketData15Min = models['MarketData15Min']
+OHLCVData15Min = models['OHLCVData15Min']
+TechnicalIndicators15Min = models['TechnicalIndicators15Min']
 
 
 def create_database_if_not_exists(db_url):

@@ -1,9 +1,5 @@
 from src.utils.logger import models_logger
 
-
-# Don't import the models directly here
-# Instead, we'll use a function to import them when needed
-
 def get_models():
     from .base import Base
     from .market_data_15_min import MarketData15Min
