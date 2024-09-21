@@ -7,7 +7,8 @@ from src.models.base import Base, engine
 
 # Get the models
 models = get_models()
-OHLCVData15Min = models['OHLCVData15Min']
+OHLCVData15Min = models["OHLCVData15Min"]
+
 
 class TestOHLCVData15Min(unittest.TestCase):
     """
@@ -49,7 +50,7 @@ class TestOHLCVData15Min(unittest.TestCase):
             low=90.0,
             close=105.0,
             volume=1000000.0,
-            price_change=5.0
+            price_change=5.0,
         )
         self.session.add(ohlcv_data)
         self.session.commit()
@@ -67,7 +68,7 @@ class TestOHLCVData15Min(unittest.TestCase):
         1. A warning is logged when attempting to set negative values for any field.
         2. The negative values are still set (as per the current implementation).
         """
-        with self.assertLogs(models_logger, level='WARNING') as cm:
+        with self.assertLogs(models_logger, level="WARNING") as cm:
             ohlcv_data = OHLCVData15Min(
                 timestamp=datetime.now(),
                 id=2,
@@ -76,7 +77,7 @@ class TestOHLCVData15Min(unittest.TestCase):
                 low=-110.0,
                 close=-105.0,
                 volume=-1000000.0,
-                price_change=-5.0
+                price_change=-5.0,
             )
             self.session.add(ohlcv_data)
             self.session.commit()
@@ -101,7 +102,7 @@ class TestOHLCVData15Min(unittest.TestCase):
         1. A warning is logged when the high value is less than the low value.
         2. The values are still set (as per the current implementation).
         """
-        with self.assertLogs(models_logger, level='WARNING') as cm:
+        with self.assertLogs(models_logger, level="WARNING") as cm:
             ohlcv_data = OHLCVData15Min(
                 timestamp=datetime.now(),
                 id=3,
@@ -110,7 +111,7 @@ class TestOHLCVData15Min(unittest.TestCase):
                 high=90.0,  # High less than low
                 close=105.0,
                 volume=1000000.0,
-                price_change=5.0
+                price_change=5.0,
             )
             self.session.add(ohlcv_data)
             self.session.commit()
@@ -122,5 +123,5 @@ class TestOHLCVData15Min(unittest.TestCase):
         self.assertEqual(retrieved_data.low, 110.0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

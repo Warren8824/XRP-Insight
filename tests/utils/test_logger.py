@@ -13,9 +13,9 @@ class TestLogger(unittest.TestCase):
     and retrieval functions in the logger module.
     """
 
-    @patch('src.utils.logger.RotatingFileHandler')
-    @patch('src.utils.logger.logging.StreamHandler')
-    @patch('src.utils.logger.os.getenv')
+    @patch("src.utils.logger.RotatingFileHandler")
+    @patch("src.utils.logger.logging.StreamHandler")
+    @patch("src.utils.logger.os.getenv")
     def test_setup_logger(self, mock_getenv, mock_stream_handler, mock_file_handler):
         """
         Test the setup_logger function.
@@ -31,7 +31,7 @@ class TestLogger(unittest.TestCase):
             mock_stream_handler (MagicMock): Mock for logging.StreamHandler.
             mock_file_handler (MagicMock): Mock for RotatingFileHandler.
         """
-        mock_getenv.return_value = 'development'
+        mock_getenv.return_value = "development"
         mock_file_handler_instance = MagicMock()
         mock_stream_handler_instance = MagicMock()
         mock_file_handler.return_value = mock_file_handler_instance
@@ -41,23 +41,25 @@ class TestLogger(unittest.TestCase):
         mock_file_handler_instance.level = logging.INFO
         mock_stream_handler_instance.level = logging.DEBUG
 
-        logger = setup_logger('test_logger', 'test_dir')
+        logger = setup_logger("test_logger", "test_dir")
 
         self.assertIsInstance(logger, logging.Logger)
-        self.assertEqual(logger.name, 'test_logger')
+        self.assertEqual(logger.name, "test_logger")
         self.assertEqual(len(logger.handlers), 2)
 
         mock_file_handler.assert_called_once()
         mock_stream_handler.assert_called_once()
         mock_file_handler_instance.setFormatter.assert_called_once()
         mock_stream_handler_instance.setFormatter.assert_called_once()
-        mock_getenv.assert_called_with('APP_ENV', 'development')
+        mock_getenv.assert_called_with("APP_ENV", "development")
 
-    @patch('src.utils.logger.os.path.exists')
-    @patch('src.utils.logger.os.makedirs')
-    @patch('src.utils.logger.setup_logger')
-    @patch('src.utils.logger.os.getenv')
-    def test_configure_loggers(self, mock_getenv, mock_setup_logger, mock_makedirs, mock_exists):
+    @patch("src.utils.logger.os.path.exists")
+    @patch("src.utils.logger.os.makedirs")
+    @patch("src.utils.logger.setup_logger")
+    @patch("src.utils.logger.os.getenv")
+    def test_configure_loggers(
+        self, mock_getenv, mock_setup_logger, mock_makedirs, mock_exists
+    ):
         """
         Test the configure_loggers function.
 
@@ -73,22 +75,31 @@ class TestLogger(unittest.TestCase):
             mock_makedirs (MagicMock): Mock for os.makedirs function.
             mock_exists (MagicMock): Mock for os.path.exists function.
         """
-        mock_getenv.return_value = 'development'
+        mock_getenv.return_value = "development"
         mock_exists.return_value = False
 
         loggers = configure_loggers()
 
-        expected_loggers = ['ai_integration', 'analysis', 'api', 'content_generation',
-                            'data_collection', 'data_processing', 'models', 'scheduler',
-                            'utils', 'scripts']
+        expected_loggers = [
+            "ai_integration",
+            "analysis",
+            "api",
+            "content_generation",
+            "data_collection",
+            "data_processing",
+            "models",
+            "scheduler",
+            "utils",
+            "scripts",
+        ]
 
         self.assertEqual(set(loggers.keys()), set(expected_loggers))
-        mock_makedirs.assert_called_once_with('logs')
+        mock_makedirs.assert_called_once_with("logs")
         self.assertEqual(mock_setup_logger.call_count, len(expected_loggers))
-        mock_exists.assert_called_once_with('logs')
-        mock_getenv.assert_called_with('APP_ENV', 'development')
+        mock_exists.assert_called_once_with("logs")
+        mock_getenv.assert_called_with("APP_ENV", "development")
 
-    @patch('src.utils.logger.configure_loggers')
+    @patch("src.utils.logger.configure_loggers")
     def test_get_loggers(self, mock_configure_loggers):
         """
         Test the get_loggers function.
@@ -103,19 +114,20 @@ class TestLogger(unittest.TestCase):
         """
         # Reset the global loggers variable
         import src.utils.logger
+
         src.utils.logger.loggers = None
 
         mock_loggers = {
-            'ai_integration': logging.getLogger('ai_integration'),
-            'analysis': logging.getLogger('analysis'),
-            'api': logging.getLogger('api'),
-            'content_generation': logging.getLogger('content_generation'),
-            'data_collection': logging.getLogger('data_collection'),
-            'data_processing': logging.getLogger('data_processing'),
-            'models': logging.getLogger('models'),
-            'scheduler': logging.getLogger('scheduler'),
-            'utils': logging.getLogger('utils'),
-            'scripts': logging.getLogger('scripts'),
+            "ai_integration": logging.getLogger("ai_integration"),
+            "analysis": logging.getLogger("analysis"),
+            "api": logging.getLogger("api"),
+            "content_generation": logging.getLogger("content_generation"),
+            "data_collection": logging.getLogger("data_collection"),
+            "data_processing": logging.getLogger("data_processing"),
+            "models": logging.getLogger("models"),
+            "scheduler": logging.getLogger("scheduler"),
+            "utils": logging.getLogger("utils"),
+            "scripts": logging.getLogger("scripts"),
         }
         mock_configure_loggers.return_value = mock_loggers
 
@@ -133,5 +145,5 @@ class TestLogger(unittest.TestCase):
         mock_configure_loggers.assert_not_called()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

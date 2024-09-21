@@ -13,17 +13,24 @@ class TestConfig(unittest.TestCase):
     loading, file not found, and invalid YAML.
     """
 
-    @patch('src.utils.config.open', new_callable=mock_open, read_data="data_collection:\n  interval_minutes: 30")
-    @patch.dict(os.environ, {
-        'COINGECKO_API_KEY': 'fake_coingecko_key',
-        'COINAPI_API_KEY': 'fake_coinapi_key',
-        'TWITTER_CONSUMER_KEY': 'fake_twitter_consumer_key',
-        'TWITTER_CONSUMER_SECRET': 'fake_twitter_consumer_secret',
-        'TWITTER_ACCESS_TOKEN': 'fake_twitter_access_token',
-        'TWITTER_ACCESS_TOKEN_SECRET': 'fake_twitter_access_token_secret',
-        'OPENAI_API_KEY': 'fake_openai_key',
-        'DATABASE_URL': 'postgresql://user:pass@localhost:5432/testdb'
-    })
+    @patch(
+        "src.utils.config.open",
+        new_callable=mock_open,
+        read_data="data_collection:\n  interval_minutes: 30",
+    )
+    @patch.dict(
+        os.environ,
+        {
+            "COINGECKO_API_KEY": "fake_coingecko_key",
+            "COINAPI_API_KEY": "fake_coinapi_key",
+            "TWITTER_CONSUMER_KEY": "fake_twitter_consumer_key",
+            "TWITTER_CONSUMER_SECRET": "fake_twitter_consumer_secret",
+            "TWITTER_ACCESS_TOKEN": "fake_twitter_access_token",
+            "TWITTER_ACCESS_TOKEN_SECRET": "fake_twitter_access_token_secret",
+            "OPENAI_API_KEY": "fake_openai_key",
+            "DATABASE_URL": "postgresql://user:pass@localhost:5432/testdb",
+        },
+    )
     def test_load_config(self, mock_file):
         """
         Test the load_config function with valid input.
@@ -41,27 +48,39 @@ class TestConfig(unittest.TestCase):
         config = load_config()
 
         # Test YAML loading
-        self.assertEqual(config['data_collection']['interval_minutes'], 30)
-        self.assertEqual(config['data_collection']['interval_seconds'], 1800)
+        self.assertEqual(config["data_collection"]["interval_minutes"], 30)
+        self.assertEqual(config["data_collection"]["interval_seconds"], 1800)
 
         # Test API key loading
-        self.assertEqual(config['api_keys']['coingecko'], 'fake_coingecko_key')
-        self.assertEqual(config['api_keys']['coinapi'], 'fake_coinapi_key')
-        self.assertEqual(config['api_keys']['twitter']['consumer_key'], 'fake_twitter_consumer_key')
-        self.assertEqual(config['api_keys']['twitter']['consumer_secret'], 'fake_twitter_consumer_secret')
-        self.assertEqual(config['api_keys']['twitter']['access_token'], 'fake_twitter_access_token')
-        self.assertEqual(config['api_keys']['twitter']['access_token_secret'], 'fake_twitter_access_token_secret')
-        self.assertEqual(config['api_keys']['openai'], 'fake_openai_key')
+        self.assertEqual(config["api_keys"]["coingecko"], "fake_coingecko_key")
+        self.assertEqual(config["api_keys"]["coinapi"], "fake_coinapi_key")
+        self.assertEqual(
+            config["api_keys"]["twitter"]["consumer_key"], "fake_twitter_consumer_key"
+        )
+        self.assertEqual(
+            config["api_keys"]["twitter"]["consumer_secret"],
+            "fake_twitter_consumer_secret",
+        )
+        self.assertEqual(
+            config["api_keys"]["twitter"]["access_token"], "fake_twitter_access_token"
+        )
+        self.assertEqual(
+            config["api_keys"]["twitter"]["access_token_secret"],
+            "fake_twitter_access_token_secret",
+        )
+        self.assertEqual(config["api_keys"]["openai"], "fake_openai_key")
 
         # Test database URL parsing
-        self.assertEqual(config['database']['url'], 'postgresql://user:pass@localhost:5432/testdb')
-        self.assertEqual(config['database']['host'], 'localhost')
-        self.assertEqual(config['database']['port'], 5432)
-        self.assertEqual(config['database']['user'], 'user')
-        self.assertEqual(config['database']['password'], 'pass')
-        self.assertEqual(config['database']['dbname'], 'testdb')
+        self.assertEqual(
+            config["database"]["url"], "postgresql://user:pass@localhost:5432/testdb"
+        )
+        self.assertEqual(config["database"]["host"], "localhost")
+        self.assertEqual(config["database"]["port"], 5432)
+        self.assertEqual(config["database"]["user"], "user")
+        self.assertEqual(config["database"]["password"], "pass")
+        self.assertEqual(config["database"]["dbname"], "testdb")
 
-    @patch('src.utils.config.open', side_effect=FileNotFoundError)
+    @patch("src.utils.config.open", side_effect=FileNotFoundError)
     def test_load_config_file_not_found(self, mock_file):
         """
         Test the load_config function when the config file is not found.
@@ -76,7 +95,11 @@ class TestConfig(unittest.TestCase):
         config = load_config()
         self.assertEqual(config, {})
 
-    @patch('src.utils.config.open', new_callable=mock_open, read_data="invalid: yaml: content:")
+    @patch(
+        "src.utils.config.open",
+        new_callable=mock_open,
+        read_data="invalid: yaml: content:",
+    )
     def test_load_config_invalid_yaml(self, mock_file):
         """
         Test the load_config function with invalid YAML content.
@@ -92,5 +115,5 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(config, {})
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

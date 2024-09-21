@@ -21,17 +21,19 @@ def collect_and_store_market_data(db: Session):
     try:
         logger.info("Collecting XRP market data from CoinGecko...")
         market_data = coingecko_client.get_xrp_data()
-        timestamp_str = market_data['last_updated']
-        timestamp = datetime.fromisoformat(timestamp_str.rstrip('Z')).replace(tzinfo=timezone.utc)
+        timestamp_str = market_data["last_updated"]
+        timestamp = datetime.fromisoformat(timestamp_str.rstrip("Z")).replace(
+            tzinfo=timezone.utc
+        )
 
         new_market_data = MarketData15Min(
             timestamp=timestamp,
-            price_usd=market_data['market_data']['current_price']['usd'],
-            market_cap=market_data['market_data']['market_cap']['usd'],
-            total_volume=market_data['market_data']['total_volume']['usd'],
-            circulating_supply=market_data['market_data']['circulating_supply'],
-            total_supply=market_data['market_data']['total_supply'],
-            max_supply=market_data['market_data']['max_supply']
+            price_usd=market_data["market_data"]["current_price"]["usd"],
+            market_cap=market_data["market_data"]["market_cap"]["usd"],
+            total_volume=market_data["market_data"]["total_volume"]["usd"],
+            circulating_supply=market_data["market_data"]["circulating_supply"],
+            total_supply=market_data["market_data"]["total_supply"],
+            max_supply=market_data["market_data"]["max_supply"],
         )
 
         db.add(new_market_data)
@@ -49,19 +51,23 @@ def collect_and_store_ohlcv_data(db: Session):
         ohlcv_data = coinapi_client.get_ohlcv_data()
 
         for candle in ohlcv_data:
-            timestamp_str = candle['time_period_start'].rstrip('Z')
-            if '.' in timestamp_str:
-                timestamp_str = timestamp_str[:timestamp_str.index('.')]  # Keep 0 decimals
-            timestamp = datetime.fromisoformat(timestamp_str).replace(tzinfo=timezone.utc)
+            timestamp_str = candle["time_period_start"].rstrip("Z")
+            if "." in timestamp_str:
+                timestamp_str = timestamp_str[
+                    : timestamp_str.index(".")
+                ]  # Keep 0 decimals
+            timestamp = datetime.fromisoformat(timestamp_str).replace(
+                tzinfo=timezone.utc
+            )
 
             new_ohlcv = OHLCVData15Min(
                 timestamp=timestamp,
-                open=candle['price_open'],
-                high=candle['price_high'],
-                low=candle['price_low'],
-                close=candle['price_close'],
-                volume=candle['volume_traded'],
-                price_change=candle['price_close'] - candle['price_open']
+                open=candle["price_open"],
+                high=candle["price_high"],
+                low=candle["price_low"],
+                close=candle["price_close"],
+                volume=candle["volume_traded"],
+                price_change=candle["price_close"] - candle["price_open"],
             )
 
             db.add(new_ohlcv)
@@ -77,28 +83,38 @@ def collect_and_store_ohlcv_data(db: Session):
 def collect_historical_data(db: Session, start_date: datetime, end_date: datetime):
     try:
         current_date = start_date
-        logger.info(f"Collecting historical OHLCV data from {start_date} to {end_date}...")
+        logger.info(
+            f"Collecting historical OHLCV data from {start_date} to {end_date}..."
+        )
 
         while current_date < end_date:
             next_date = min(current_date + timedelta(days=1), end_date)
-            ohlcv_data = coinapi_client.get_historical_ohlcv_data(current_date, next_date)
+            ohlcv_data = coinapi_client.get_historical_ohlcv_data(
+                current_date, next_date
+            )
 
-            logger.info(f"Retrieved {len(ohlcv_data)} data points for {current_date.date()}")
+            logger.info(
+                f"Retrieved {len(ohlcv_data)} data points for {current_date.date()}"
+            )
 
             for candle in ohlcv_data:
-                timestamp_str = candle['time_period_start'].rstrip('Z')
-                if '.' in timestamp_str:
-                    timestamp_str = timestamp_str[:timestamp_str.index('.')]  # Keep 0 decimal places
-                timestamp = datetime.fromisoformat(timestamp_str).replace(tzinfo=timezone.utc)
+                timestamp_str = candle["time_period_start"].rstrip("Z")
+                if "." in timestamp_str:
+                    timestamp_str = timestamp_str[
+                        : timestamp_str.index(".")
+                    ]  # Keep 0 decimal places
+                timestamp = datetime.fromisoformat(timestamp_str).replace(
+                    tzinfo=timezone.utc
+                )
 
                 new_ohlcv = OHLCVData15Min(
                     timestamp=timestamp,
-                    open=candle['price_open'],
-                    high=candle['price_high'],
-                    low=candle['price_low'],
-                    close=candle['price_close'],
-                    volume=candle['volume_traded'],
-                    price_change=candle['price_close'] - candle['price_open']
+                    open=candle["price_open"],
+                    high=candle["price_high"],
+                    low=candle["price_low"],
+                    close=candle["price_close"],
+                    volume=candle["volume_traded"],
+                    price_change=candle["price_close"] - candle["price_open"],
                 )
 
                 db.add(new_ohlcv)

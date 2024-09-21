@@ -30,14 +30,14 @@ class TestBase(unittest.TestCase):
         actual_url = urlparse(str(engine.url))
 
         # Verify the scheme
-        self.assertEqual(actual_url.scheme, 'postgresql')
+        self.assertEqual(actual_url.scheme, "postgresql")
 
         # Verify the host and port
-        self.assertEqual(actual_url.hostname, 'localhost')
+        self.assertEqual(actual_url.hostname, "localhost")
         self.assertEqual(actual_url.port, 5432)
 
         # Verify the database name
-        self.assertEqual(actual_url.path, '/xrp_insight')
+        self.assertEqual(actual_url.path, "/xrp_insight")
 
         # Verify that a username is present (without checking its exact value)
         self.assertIsNotNone(actual_url.username)
@@ -56,7 +56,7 @@ class TestBase(unittest.TestCase):
         self.assertIsInstance(session, Session)
         session.close()
 
-    @patch('src.models.base.SessionLocal')
+    @patch("src.models.base.SessionLocal")
     def test_get_db(self, mock_session_local):
         """
         Test the get_db function.
@@ -84,8 +84,8 @@ class TestBase(unittest.TestCase):
 
         mock_session.close.assert_called_once()
 
-    @patch('src.models.base.Base.metadata.create_all')
-    @patch('src.models.base.engine.connect')
+    @patch("src.models.base.Base.metadata.create_all")
+    @patch("src.models.base.engine.connect")
     def test_init_db(self, mock_connect, mock_create_all):
         """
         Test the init_db function.
@@ -104,8 +104,10 @@ class TestBase(unittest.TestCase):
         init_db()
 
         mock_create_all.assert_called_once_with(bind=engine)
-        mock_connection.execute.assert_called_once_with("CREATE EXTENSION IF NOT EXISTS timescaledb")
+        mock_connection.execute.assert_called_once_with(
+            "CREATE EXTENSION IF NOT EXISTS timescaledb"
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

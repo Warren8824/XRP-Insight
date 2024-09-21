@@ -6,6 +6,7 @@ from src.models.market_data_15_min import MarketData15Min
 from src.models.base import Base, engine
 from src.models import models_logger  # Change this line
 
+
 class TestMarketData15Min(unittest.TestCase):
     """
     A test suite for the MarketData15Min model.
@@ -46,7 +47,7 @@ class TestMarketData15Min(unittest.TestCase):
             total_volume=500000.0,
             circulating_supply=1000000.0,
             total_supply=2000000.0,
-            max_supply=3000000.0
+            max_supply=3000000.0,
         )
         self.session.add(market_data)
         self.session.commit()
@@ -65,7 +66,7 @@ class TestMarketData15Min(unittest.TestCase):
         1. A warning is logged when attempting to set a negative price_usd.
         2. The negative value is still set (as per the current implementation).
         """
-        with self.assertLogs(models_logger, level='WARNING') as cm:
+        with self.assertLogs(models_logger, level="WARNING") as cm:
             market_data = MarketData15Min(
                 timestamp=datetime.now(),
                 id=2,
@@ -73,7 +74,7 @@ class TestMarketData15Min(unittest.TestCase):
                 market_cap=1000000.0,
                 total_volume=500000.0,
                 circulating_supply=1000000.0,
-                total_supply=2000000.0
+                total_supply=2000000.0,
             )
             self.session.add(market_data)
             self.session.commit()
@@ -90,7 +91,7 @@ class TestMarketData15Min(unittest.TestCase):
         1. A warning is logged when attempting to set a negative market_cap.
         2. The negative value is still set (as per the current implementation).
         """
-        with self.assertLogs(models_logger, level='WARNING') as cm:
+        with self.assertLogs(models_logger, level="WARNING") as cm:
             market_data = MarketData15Min(
                 timestamp=datetime.now(),
                 id=3,
@@ -98,7 +99,7 @@ class TestMarketData15Min(unittest.TestCase):
                 market_cap=-1000000.0,
                 total_volume=500000.0,
                 circulating_supply=1000000.0,
-                total_supply=2000000.0
+                total_supply=2000000.0,
             )
             self.session.add(market_data)
             self.session.commit()
@@ -107,5 +108,6 @@ class TestMarketData15Min(unittest.TestCase):
         retrieved_data = self.session.query(MarketData15Min).filter_by(id=3).first()
         self.assertEqual(retrieved_data.market_cap, -1000000.0)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

@@ -16,33 +16,35 @@ def load_config():
         utils_logger.info("Loaded configuration from YAML file.")
 
         # Merge with environment variables
-        config['api_keys'] = {
-            'coingecko': os.getenv('COINGECKO_API_KEY'),
-            'coinapi': os.getenv('COINAPI_API_KEY'),
-            'twitter': {
-                'consumer_key': os.getenv('TWITTER_CONSUMER_KEY'),
-                'consumer_secret': os.getenv('TWITTER_CONSUMER_SECRET'),
-                'access_token': os.getenv('TWITTER_ACCESS_TOKEN'),
-                'access_token_secret': os.getenv('TWITTER_ACCESS_TOKEN_SECRET'),
+        config["api_keys"] = {
+            "coingecko": os.getenv("COINGECKO_API_KEY"),
+            "coinapi": os.getenv("COINAPI_API_KEY"),
+            "twitter": {
+                "consumer_key": os.getenv("TWITTER_CONSUMER_KEY"),
+                "consumer_secret": os.getenv("TWITTER_CONSUMER_SECRET"),
+                "access_token": os.getenv("TWITTER_ACCESS_TOKEN"),
+                "access_token_secret": os.getenv("TWITTER_ACCESS_TOKEN_SECRET"),
             },
-            'openai': os.getenv('OPENAI_API_KEY'),
+            "openai": os.getenv("OPENAI_API_KEY"),
         }
         utils_logger.info("Merged API keys with environment variables.")
 
         # Update configuration with environment variables
-        config['data_collection']['interval_seconds'] = config['data_collection'].get('interval_minutes', 15) * 60
+        config["data_collection"]["interval_seconds"] = (
+            config["data_collection"].get("interval_minutes", 15) * 60
+        )
 
         # Parse DATABASE_URL
-        db_url = os.getenv('DATABASE_URL')
+        db_url = os.getenv("DATABASE_URL")
         if db_url:
             parsed_url = urlparse(db_url)
-            config['database'] = {
-                'url': db_url,
-                'host': parsed_url.hostname,
-                'port': parsed_url.port,
-                'user': parsed_url.username,
-                'password': parsed_url.password,
-                'dbname': parsed_url.path[1:]  # Remove leading '/'
+            config["database"] = {
+                "url": db_url,
+                "host": parsed_url.hostname,
+                "port": parsed_url.port,
+                "user": parsed_url.username,
+                "password": parsed_url.password,
+                "dbname": parsed_url.path[1:],  # Remove leading '/'
             }
         else:
             utils_logger.error("DATABASE_URL not found in environment variables.")

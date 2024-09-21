@@ -2,10 +2,11 @@ import requests
 from ..utils.config import config
 from ..utils.logger import data_collection_logger
 
+
 class CoinGeckoClient:
     def __init__(self):
-        self.base_url = config['api_endpoints']['coingecko']
-        self.api_key = config['api_keys']['coingecko']
+        self.base_url = config["api_endpoints"]["coingecko"]
+        self.api_key = config["api_keys"]["coingecko"]
         self.logger = data_collection_logger
 
     def get_xrp_data(self):
@@ -16,7 +17,7 @@ class CoinGeckoClient:
             "market_data": "true",
             "community_data": "false",
             "developer_data": "false",
-            "sparkline": "false"
+            "sparkline": "false",
         }
         headers = {"X-Cg-Pro-Api-Key": self.api_key}
 
@@ -34,22 +35,24 @@ class CoinGeckoClient:
 
     def get_xrp_historical_data(self, days=1, interval="15m"):
         endpoint = f"{self.base_url}/coins/ripple/market_chart"
-        params = {
-            "vs_currency": "usd",
-            "days": days,
-            "interval": interval
-        }
+        params = {"vs_currency": "usd", "days": days, "interval": interval}
         headers = {"X-Cg-Pro-Api-Key": self.api_key}
 
         # Log the request
-        self.logger.info(f"Requesting XRP historical data from CoinGecko endpoint: {endpoint}")
+        self.logger.info(
+            f"Requesting XRP historical data from CoinGecko endpoint: {endpoint}"
+        )
         self.logger.info(f"Parameters: {params}")
 
         try:
             response = requests.get(endpoint, params=params, headers=headers)
             response.raise_for_status()
-            self.logger.info("Successfully retrieved XRP historical data from CoinGecko")
+            self.logger.info(
+                "Successfully retrieved XRP historical data from CoinGecko"
+            )
             return response.json()
         except requests.exceptions.RequestException as e:
-            self.logger.error(f"Error retrieving XRP historical data from CoinGecko: {str(e)}")
+            self.logger.error(
+                f"Error retrieving XRP historical data from CoinGecko: {str(e)}"
+            )
             raise
