@@ -22,7 +22,8 @@ class CoinAPIClient:
         try:
             response = requests.get(endpoint, params=params, headers=headers)
             response.raise_for_status()
-            return response.json()
+            data = response.json()
+            return data
         except requests.exceptions.RequestException as e:
             self.logger.error(f"Error retrieving OHLCV data: {str(e)}")
             raise

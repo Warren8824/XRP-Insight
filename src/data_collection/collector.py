@@ -21,9 +21,8 @@ def collect_and_store_market_data(db: Session):
     try:
         logger.info("Collecting XRP market data from CoinGecko...")
         market_data = coingecko_client.get_xrp_data()
-
-        # Convert the timestamp to a datetime object
-        timestamp = datetime.fromtimestamp(market_data['last_updated_at'], tz=timezone.utc)
+        timestamp_str = market_data['last_updated']
+        timestamp = datetime.fromisoformat(timestamp_str.rstrip('Z')).replace(tzinfo=timezone.utc)
 
         new_market_data = MarketData15Min(
             timestamp=timestamp,
@@ -50,7 +49,10 @@ def collect_and_store_ohlcv_data(db: Session):
         ohlcv_data = coinapi_client.get_ohlcv_data()
 
         for candle in ohlcv_data:
-            timestamp = datetime.fromisoformat(candle['time_period_start'].rstrip('Z')).replace(tzinfo=timezone.utc)
+            timestamp_str = candle['time_period_start'].rstrip('Z')
+            if '.' in timestamp_str:
+                timestamp_str = timestamp_str[:timestamp_str.index('.')]  # Keep 0 decimals
+            timestamp = datetime.fromisoformat(timestamp_str).replace(tzinfo=timezone.utc)
 
             new_ohlcv = OHLCVData15Min(
                 timestamp=timestamp,
@@ -81,8 +83,13 @@ def collect_historical_data(db: Session, start_date: datetime, end_date: datetim
             next_date = min(current_date + timedelta(days=1), end_date)
             ohlcv_data = coinapi_client.get_historical_ohlcv_data(current_date, next_date)
 
+            logger.info(f"Retrieved {len(ohlcv_data)} data points for {current_date.date()}")
+
             for candle in ohlcv_data:
-                timestamp = datetime.fromisoformat(candle['time_period_start'].rstrip('Z')).replace(tzinfo=timezone.utc)
+                timestamp_str = candle['time_period_start'].rstrip('Z')
+                if '.' in timestamp_str:
+                    timestamp_str = timestamp_str[:timestamp_str.index('.')]  # Keep 0 decimal places
+                timestamp = datetime.fromisoformat(timestamp_str).replace(tzinfo=timezone.utc)
 
                 new_ohlcv = OHLCVData15Min(
                     timestamp=timestamp,
