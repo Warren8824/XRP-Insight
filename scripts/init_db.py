@@ -3,13 +3,7 @@ from sqlalchemy.exc import OperationalError
 import psycopg2
 from psycopg2 import sql
 
-import os
-import sys
-
-# Add the project root directory to the Python path
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(project_root)
-
+import path_setup
 from src.utils.logger import scripts_logger
 from src.utils.config import config
 from src.models import get_models
@@ -98,7 +92,7 @@ def init_db():
 
         # Create SQLAlchemy engine
         engine = create_engine(db_url)
-        scripts_logger.info(f"Attempting to connect to the database.")
+        scripts_logger.info("Attempting to connect to the database.")
 
         # Test the connection
         with engine.connect():
