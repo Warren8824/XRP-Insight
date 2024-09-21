@@ -55,6 +55,7 @@ class TestMarketData15Min(unittest.TestCase):
         self.assertIsNotNone(retrieved_data)
         self.assertEqual(retrieved_data.price_usd, 100.0)
         self.assertEqual(retrieved_data.market_cap, 1000000.0)
+        self.assertEqual(retrieved_data.max_supply, 3000000.0)
 
     def test_price_usd_validation(self):
         """

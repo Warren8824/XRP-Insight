@@ -3,7 +3,7 @@ from sqlalchemy.orm import validates
 from sqlalchemy import event
 
 from src.models.base import Base
-from src.models import models_logger
+from src.utils.logger import models_logger
 
 
 class OHLCVData15Min(Base):
@@ -29,20 +29,27 @@ class OHLCVData15Min(Base):
 
         # Special checks for 'high' and 'low'
         if key in ['high', 'low']:
-            if key == 'high' and hasattr(self, 'low') and value < self.low:
-                models_logger.warning(f"High value {value} is less than low value {self.low}")
-            elif key == 'low' and hasattr(self, 'high') and value > self.high:
-                models_logger.warning(f"Low value {value} is greater than high value {self.high}")
+            other_key = 'low' if key == 'high' else 'high'
+            other_value = getattr(self, other_key, None)
+
+            if other_value is not None:
+                if key == 'high' and value < other_value:
+                    models_logger.warning(f"High value {value} is less than low value {other_value}")
+                elif key == 'low' and value > other_value:
+                    models_logger.warning(f"Low value {value} is greater than high value {other_value}")
 
         return value
+
 
 @event.listens_for(OHLCVData15Min, 'after_insert')
 def after_insert(mapper, connection, target):
     models_logger.info(f"Inserted OHLCVData15Min record: {target}")
 
+
 @event.listens_for(OHLCVData15Min, 'after_update')
 def after_update(mapper, connection, target):
     models_logger.info(f"Updated OHLCVData15Min record: {target}")
+
 
 @event.listens_for(OHLCVData15Min, 'after_delete')
 def after_delete(mapper, connection, target):

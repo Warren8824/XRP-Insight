@@ -3,7 +3,7 @@ from sqlalchemy.orm import validates
 from sqlalchemy import event
 
 from src.models.base import Base
-from src.models import models_logger
+from src.utils.logger import models_logger  # Import directly from utils
 
 class MarketData15Min(Base):
     __tablename__ = "market_data_15_min"
@@ -31,13 +31,17 @@ class MarketData15Min(Base):
         if value < 0:
             models_logger.warning(f"Attempted to set negative market_cap: {value}")
         return value
+
+
 @event.listens_for(MarketData15Min, 'after_insert')
 def after_insert(mapper, connection, target):
     models_logger.info(f"Inserted MarketData15Min record: {target}")
 
+
 @event.listens_for(MarketData15Min, 'after_update')
 def after_update(mapper, connection, target):
     models_logger.info(f"Updated MarketData15Min record: {target}")
+
 
 @event.listens_for(MarketData15Min, 'after_delete')
 def after_delete(mapper, connection, target):

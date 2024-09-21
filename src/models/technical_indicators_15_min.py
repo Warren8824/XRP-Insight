@@ -3,7 +3,7 @@ from sqlalchemy.orm import validates
 from sqlalchemy import event
 
 from src.models.base import Base
-from src.models import models_logger
+from src.utils.logger import models_logger
 
 
 class TechnicalIndicators15Min(Base):
