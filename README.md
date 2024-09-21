@@ -36,7 +36,7 @@ We're off to an exciting start! Here's what we've accomplished so far:
 
 ## 🌈 What's Next?
 
-We're just getting started! Our [roadmap](ROADMAP.md) is packed with exciting features like advanced AI integration, predictive models, and interactive visualizations. Stay tuned for updates, and don't hesitate to contribute your ideas!
+We're just getting started! Our [roadmap](docs/ROADMAP.md) is packed with exciting features like advanced AI integration, predictive models, and interactive visualizations. Stay tuned for updates, and don't hesitate to contribute your ideas!
 
 ## 🤝 Join the Revolution!
 
@@ -109,7 +109,7 @@ xrp-insight/
 
 ## Roadmap
 
-- [x] Phase 1 Development - In Progress - see [ROADMAP.md](ROADMAP.md) for our current plans.
+- [x] Phase 1 Development - In Progress - see [ROADMAP.md](docs/ROADMAP.md) for our current plans.
 - [ ] Implement advanced technical indicators
 - [ ] Develop AI-driven content generation system
 - [ ] Create API for data access
