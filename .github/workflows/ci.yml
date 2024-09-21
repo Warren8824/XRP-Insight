@@ -10,6 +10,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [ 16 ]
+
     services:
       postgres:
         image: timescale/timescaledb:latest-pg14
