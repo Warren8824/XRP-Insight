@@ -3,7 +3,7 @@ from sqlalchemy.orm import validates
 from sqlalchemy import event
 
 from src.models.base import Base
-
+from src.models import models_logger
 
 class MarketData15Min(Base):
     __tablename__ = "market_data_15_min"
