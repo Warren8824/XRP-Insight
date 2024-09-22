@@ -4,6 +4,7 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-brightgreen)
 ![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
+[![CI](https://github.com/Warren8824/XRP-Insight/actions/workflows/ci.yml/badge.svg)](https://github.com/Warren8824/XRP-Insight/actions/workflows/ci.yml)
 
 ## 🌟 Overview
 
