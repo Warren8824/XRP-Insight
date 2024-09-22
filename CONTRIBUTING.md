@@ -41,11 +41,11 @@ To make changes, create a new branch in your local repository. Choose a branch n
 - Ensure your code adheres to the Style Guide and passes Black and Flake8 checks (details below).
 - Make sure your changes do not break any existing functionality. Running tests is always a good idea.
 
-### 5. Code Formatting and Linting
-To maintain code consistency, we use Black for code formatting and Flake8 for linting. Before committing your code, please follow these steps to ensure your code adheres to the project standards:
+### 5. Code Formatting
+To maintain code consistency, we use Black for code formatting. Before committing your code, please follow this step to ensure your code adheres to the project standards:
 
-1. Run Black: This will automatically format your code. `black .`
-2. Run Flake8: This will check for any linting errors. `flake8`
+- Run Black: This will automatically format your code. `black .`
+
 
 Our GitHub Actions workflow will also automatically run these tools on each pull request, but it's best to check locally before submitting your changes.
 
