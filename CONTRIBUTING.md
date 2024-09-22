@@ -38,7 +38,7 @@ To make changes, create a new branch in your local repository. Choose a branch n
 
 ### 4. Make Your Changes
 - Make your changes in the project.
-- Ensure your code adheres to the Style Guide and passes Black and Flake8 checks (details below).
+- Ensure your code adheres to the Style Guide and passes Black checks (details below).
 - Make sure your changes do not break any existing functionality. Running tests is always a good idea.
 
 ### 5. Code Formatting
@@ -47,9 +47,9 @@ To maintain code consistency, we use Black for code formatting. Before committin
 - Run Black: This will automatically format your code. `black .`
 
 
-Our GitHub Actions workflow will also automatically run these tools on each pull request, but it's best to check locally before submitting your changes.
+Our GitHub Actions workflow will also automatically run this tool on each pull request, but it's best to check locally before submitting your changes.
 
-You can install these tools using pip: `pip install black flake8` 
+You can install these tools using pip: `pip install black` 
 
 ### 6. Commit Your Changes
 After making your changes, stage and commit them with a descriptive message: 
