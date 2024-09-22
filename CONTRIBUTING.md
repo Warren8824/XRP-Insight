@@ -85,7 +85,6 @@ When reporting bugs or suggesting features, please be as descriptive as possible
 To ensure consistency and readability, please follow these guidelines:
 
 - Code Formatting: We use Black for consistent formatting across the project. Run black . before committing to automatically format your code.
-- Linting: We use Flake8 to ensure code quality. Run flake8 to check your code for any issues.
 - Commit Messages: Write clear, concise commit messages. Use imperative mood (e.g., "Fix bug in data parsing").
 - Documentation: For any new features, add relevant documentation in the code and, if necessary, update the project documentation.
 
