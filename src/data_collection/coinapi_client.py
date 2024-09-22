@@ -31,7 +31,7 @@ class CoinAPIClient:
     ):
         endpoint = f"{self.base_url}/ohlcv/BITSTAMP_SPOT_XRP_USD/history"
         params = {
-            "period_id": "15MIN",
+            "period_id": "30MIN",
             "time_start": start_time.isoformat(),
             "limit": min(limit, self.daily_limit),  # Ensure we don't exceed daily limit
         }
