@@ -49,7 +49,7 @@ To maintain code consistency, we use Black for code formatting. Before committin
 
 Our GitHub Actions workflow will also automatically run this tool on each pull request, but it's best to check locally before submitting your changes.
 
-You can install these tools using pip: `pip install black` 
+You can install this tool using pip: `pip install black` 
 
 ### 6. Commit Your Changes
 After making your changes, stage and commit them with a descriptive message: 
