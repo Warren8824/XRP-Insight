@@ -9,7 +9,7 @@ class CoinGeckoClient:
         self.api_key = config["api_keys"]["coingecko"]
         self.logger = data_collection_logger
 
-    def get_xrp_data(self):
+    def get_market_data(self):
         endpoint = f"{self.base_url}/coins/ripple"
         params = {
             "localization": "false",
@@ -33,7 +33,7 @@ class CoinGeckoClient:
             self.logger.error(f"Error retrieving XRP data from CoinGecko: {str(e)}")
             raise
 
-    def get_xrp_historical_data(self, days=1, interval="15m"):
+    def get_historical_market_data(self, days=1, interval="15m"):
         endpoint = f"{self.base_url}/coins/ripple/market_chart"
         params = {"vs_currency": "usd", "days": days, "interval": interval}
         headers = {"X-Cg-Pro-Api-Key": self.api_key}

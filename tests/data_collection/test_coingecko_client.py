@@ -9,7 +9,7 @@ class TestCoinGeckoClient(unittest.TestCase):
         self.client = CoinGeckoClient()
 
     @patch("src.data_collection.coingecko_client.requests.get")
-    def test_get_xrp_data(self, mock_get):
+    def test_get_market_data(self, mock_get):
         # Mock the response
         mock_response = MagicMock()
         mock_response.json.return_value = {"test": "xrp_data"}
@@ -17,7 +17,7 @@ class TestCoinGeckoClient(unittest.TestCase):
         mock_get.return_value = mock_response
 
         # Call the method
-        result = self.client.get_xrp_data()
+        result = self.client.get_market_data()
 
         # Assert the result
         self.assertEqual(result, {"test": "xrp_data"})
@@ -38,7 +38,7 @@ class TestCoinGeckoClient(unittest.TestCase):
         )
 
     @patch("src.data_collection.coingecko_client.requests.get")
-    def test_get_xrp_historical_data(self, mock_get):
+    def test_get_historical_market_data(self, mock_get):
         # Mock the response
         mock_response = MagicMock()
         mock_response.json.return_value = {"test": "historical_data"}
@@ -46,7 +46,7 @@ class TestCoinGeckoClient(unittest.TestCase):
         mock_get.return_value = mock_response
 
         # Call the method
-        result = self.client.get_xrp_historical_data(days=2, interval="30m")
+        result = self.client.get_historical_market_data(days=2, interval="30m")
 
         # Assert the result
         self.assertEqual(result, {"test": "historical_data"})
@@ -62,13 +62,13 @@ class TestCoinGeckoClient(unittest.TestCase):
         )
 
     @patch("src.data_collection.coingecko_client.requests.get")
-    def test_get_xrp_data_error(self, mock_get):
+    def test_get_market_data_error(self, mock_get):
         # Mock the response to raise an exception
         mock_get.side_effect = Exception("API Error")
 
         # Assert that the method raises an exception
         with self.assertRaises(Exception):
-            self.client.get_xrp_data()
+            self.client.get_market_data()
 
 
 if __name__ == "__main__":

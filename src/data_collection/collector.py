@@ -36,7 +36,7 @@ def collect_and_store_market_data(db: Session):
     """
     try:
         logger.info("Collecting XRP market data from CoinGecko...")
-        market_data = coingecko_client.get_xrp_data()
+        market_data = coingecko_client.get_market_data()
         timestamp_str = market_data["last_updated"]
         timestamp = datetime.fromisoformat(timestamp_str.rstrip("Z")).replace(
             tzinfo=timezone.utc
