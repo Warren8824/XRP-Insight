@@ -7,11 +7,25 @@ from src.utils.config import config
 
 class TestCoinAPIClient(unittest.TestCase):
     def setUp(self):
+        """
+           Set up a CoinAPIClient instance for use in all test methods.
+           This method is run before each test.
+        """
         self.client = CoinAPIClient()
 
     @patch("src.data_collection.coinapi_client.requests.get")
     def test_get_ohlcv_data(self, mock_get):
-        # Mock the response
+        """
+            Test the get_ohlcv_data method of CoinAPIClient.
+
+            This test mocks the requests.get function to return a predefined OHLCV data response.
+            It then calls the get_ohlcv_data method and verifies that:
+            1. The returned data has the expected structure and values.
+            2. The API was called with the correct URL, parameters, and headers.
+
+            Args:
+                mock_get: A mocked requests.get function.
+        """
         mock_response = MagicMock()
         mock_response.json.return_value = [
             {
@@ -47,6 +61,17 @@ class TestCoinAPIClient(unittest.TestCase):
 
     @patch("src.data_collection.coinapi_client.requests.get")
     def test_get_historical_ohlcv_data(self, mock_get):
+        """
+            Test the get_historical_ohlcv_data method of CoinAPIClient.
+
+            This test mocks the requests.get function to return a predefined historical OHLCV data response.
+            It then calls the get_historical_ohlcv_data method with specific start and end times, and verifies that:
+            1. The returned data matches the mocked response.
+            2. The API was called with the correct URL, parameters (including time range), and headers.
+
+            Args:
+                mock_get: A mocked requests.get function.
+        """
         # Mock the response
         mock_response = MagicMock()
         mock_response.json.return_value = [{"test": "historical_data"}]
@@ -81,6 +106,16 @@ class TestCoinAPIClient(unittest.TestCase):
 
     @patch("src.data_collection.coinapi_client.requests.get")
     def test_get_ohlcv_data_error(self, mock_get):
+        """
+            Test the error handling of the get_ohlcv_data method.
+
+            This test mocks the requests.get function to raise an exception.
+            It then calls the get_ohlcv_data method and verifies that:
+            1. The method raises an exception when the API call fails.
+
+            Args:
+                mock_get: A mocked requests.get function set to raise an exception.
+        """
         # Mock the response to raise an exception
         mock_get.side_effect = Exception("API Error")
 
