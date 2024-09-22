@@ -30,7 +30,7 @@ Click the "Fork" button at the top of the repository page to create a copy of th
 ### 2. Clone the Fork
 Clone your fork to your local machine by running the following command:
 ```bash
-git clone https://github.com/your-username/your-forked-repo.git
+git clone https://github.com/Warren8824/XRP-Insight.git
 ```
 
 ### 3. Create a Branch
