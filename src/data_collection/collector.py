@@ -18,6 +18,22 @@ logger = data_collection_logger
 
 
 def collect_and_store_market_data(db: Session):
+    """
+        Collect current market data for XRP from CoinGecko and store it in the database.
+
+        This function retrieves the latest market data for XRP cryptocurrency from the
+        CoinGecko API, including current price, market cap, volume, and supply information.
+        It then stores this data in the provided database.
+
+        Args:
+            db: A database session object for storing the collected data.
+
+        Returns:
+            None
+
+        Raises:
+            Any exceptions raised by the CoinGecko API or database operations.
+    """
     try:
         logger.info("Collecting XRP market data from CoinGecko...")
         market_data = coingecko_client.get_xrp_data()
@@ -46,6 +62,21 @@ def collect_and_store_market_data(db: Session):
 
 
 def collect_and_store_ohlcv_data(db: Session):
+    """
+        Collect and store the latest OHLCV (Open, High, Low, Close, Volume) data for XRP.
+
+        This function retrieves the most recent OHLCV data for XRP cryptocurrency from
+        the CoinAPI. It then stores this data in the provided database.
+
+        Args:
+            db: A database session object for storing the collected data.
+
+        Returns:
+            None
+
+        Raises:
+            Any exceptions raised by the CoinAPI or database operations.
+    """
     try:
         logger.info("Collecting XRP OHLCV data from CoinAPI...")
         ohlcv_data = coinapi_client.get_ohlcv_data()
@@ -81,6 +112,24 @@ def collect_and_store_ohlcv_data(db: Session):
 
 
 def collect_historical_data(db: Session, start_date: datetime, end_date: datetime):
+    """
+        Collect and store historical OHLCV data for XRP within a specified date range.
+
+        This function retrieves historical OHLCV data for XRP cryptocurrency from CoinAPI
+        for the period between start_date and end_date. It then stores this data in the
+        provided database.
+
+        Args:
+            db: A database session object for storing the collected data.
+            start_date (datetime): The start date for the historical data collection.
+            end_date (datetime): The end date for the historical data collection.
+
+        Returns:
+            None
+
+        Raises:
+            Any exceptions raised by the CoinAPI or database operations.
+    """
     try:
         current_date = start_date
         logger.info(
@@ -129,6 +178,22 @@ def collect_historical_data(db: Session, start_date: datetime, end_date: datetim
 
 
 def run_data_collection(db: Session):
+    """
+       Run the complete data collection process.
+
+       This function orchestrates the entire data collection process by calling both
+       collect_and_store_market_data() and collect_and_store_ohlcv_data() functions.
+       It's designed to be the main entry point for the data collection routine.
+
+       Args:
+           db: A database session object for storing the collected data.
+
+       Returns:
+           None
+
+       Raises:
+           Any exceptions raised by the called functions or database operations.
+    """
     try:
         logger.info("Starting data collection process...")
         collect_and_store_market_data(db)
