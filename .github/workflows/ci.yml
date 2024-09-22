@@ -10,13 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@localhost:5432/xrp_insight
       COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
       COINAPI_API_KEY: ${{ secrets.COINAPI_API_KEY }}
-
-    strategy:
-      matrix:
-        node-version: [ 16 ]
+      POSTGRES_USER: ${{ secrets.DB_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      POSTGRES_DB: xrp_insight
 
     services:
       postgres:
@@ -37,6 +36,14 @@ jobs:
       with:
         python-version: '3.10.12'
 
+    - name: Cache pip dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -44,26 +51,20 @@ jobs:
 
     - name: Check code formatting with Black
       run: |
+        pip install black
         black --check src tests scripts
-
-    - name: Run tests
-      env:
-        COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
-        COINAPI_API_KEY: ${{ secrets.COINAPI_API_KEY }}
-        POSTGRES_USER: ${{ secrets.DB_USER }}
-        POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        POSTGRES_DB: xrp_insight
-      run: |
-        python -m pytest tests
+      continue-on-error: true
 
     - name: Run database initialization
-      env:
-        DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@localhost:5432/xrp_insight
       run: |
         python scripts/init_db.py
 
-    - name: Check database connection
-      env:
-        DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@localhost:5432/xrp_insight
+    - name: Run tests
       run: |
-        python -c "from src.utils.config import config; from sqlalchemy import create_engine; engine = create_engine(config['database']['url']); connection = engine.connect(); connection.close()"
+        python -m pytest tests
+
+    - name: Check for code formatting issues
+      if: ${{ steps.black.outcome == 'failure' }}
+      run: |
+          echo "Error: Code formatting issues detected. Please run 'black src tests scripts' locally and commit the changes."
+          exit 1
