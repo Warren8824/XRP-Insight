@@ -45,8 +45,6 @@ jobs:
     - name: Run tests
       env:
         COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
-        COINAPI_API_KEY: ${{ secrets.COINAPI_API_KEY }}
-        DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@localhost:5432/xrp_insight
       run: |
         python -m pytest tests
 
