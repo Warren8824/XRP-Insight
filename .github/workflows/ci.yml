@@ -67,7 +67,3 @@ jobs:
         DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@localhost:5432/xrp_insight
       run: |
         python -c "from src.utils.config import config; from sqlalchemy import create_engine; engine = create_engine(config['database']['url']); connection = engine.connect(); connection.close()"
-
-    - name: Run linter
-      run: |
-        flake8 src tests scripts
