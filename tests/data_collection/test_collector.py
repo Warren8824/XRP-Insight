@@ -32,7 +32,7 @@ class TestCollector(unittest.TestCase):
         """
         # Mock the CoinGeckoClient
         mock_coingecko_instance = mock_coingecko.return_value
-        mock_coingecko_instance.get_xrp_data.return_value = {
+        mock_coingecko_instance.get_market_data.return_value = {
             "last_updated": "2023-07-01T12:00:00Z",
             "market_data": {
                 "current_price": {"usd": 1.0},
