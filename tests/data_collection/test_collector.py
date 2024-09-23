@@ -20,17 +20,6 @@ class TestCollector(unittest.TestCase):
 
     @patch("src.data_collection.collector.CoinGeckoClient")
     def test_collect_and_store_market_data(self, mock_coingecko):
-        """
-        Test the collect_and_store_market_data function.
-
-        This test mocks the CoinGeckoClient to return predefined market data,
-        calls the collect_and_store_market_data function, and verifies that
-        the mock database's add and commit methods were called as expected.
-
-        Args:
-            mock_coingecko: A mocked CoinGeckoClient object.
-        """
-        # Mock the CoinGeckoClient
         mock_coingecko_instance = mock_coingecko.return_value
         mock_coingecko_instance.get_market_data.return_value = {
             "last_updated": "2023-07-01T12:00:00Z",
@@ -44,8 +33,8 @@ class TestCollector(unittest.TestCase):
             },
         }
 
-        # Call the function
-        collect_and_store_market_data(self.mock_db)
+        # Call the function with the mocked client
+        collect_and_store_market_data(self.mock_db, mock_coingecko_instance)
 
         # Assert that the database session methods were called
         self.mock_db.add.assert_called_once()
