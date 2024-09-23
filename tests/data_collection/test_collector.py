@@ -120,7 +120,7 @@ class TestCollector(unittest.TestCase):
 
         This test mocks both collect_and_store_market_data and collect_and_store_ohlcv_data functions,
         calls the run_data_collection function, and verifies that both mocked functions
-        were called once with the mock database.
+        were called once with the mock database and None for the client parameter.
 
         Args:
             mock_collect_ohlcv: A mocked collect_and_store_ohlcv_data function.
@@ -129,9 +129,9 @@ class TestCollector(unittest.TestCase):
         # Call the function
         run_data_collection(self.mock_db)
 
-        # Assert that both collection functions were called
-        mock_collect_market.assert_called_once_with(self.mock_db)
-        mock_collect_ohlcv.assert_called_once_with(self.mock_db)
+        # Assert that both collection functions were called with the correct arguments
+        mock_collect_market.assert_called_once_with(self.mock_db, None)
+        mock_collect_ohlcv.assert_called_once_with(self.mock_db, None)
 
 
 if __name__ == "__main__":
