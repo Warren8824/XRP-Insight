@@ -12,8 +12,8 @@ from src.data_collection.collector import (
 class TestCollector(unittest.TestCase):
     def setUp(self):
         """
-            Set up a mock database object for use in all test methods.
-            This method is run before each test.
+        Set up a mock database object for use in all test methods.
+        This method is run before each test.
         """
 
         self.mock_db = MagicMock()
@@ -21,14 +21,14 @@ class TestCollector(unittest.TestCase):
     @patch("src.data_collection.collector.CoinGeckoClient")
     def test_collect_and_store_market_data(self, mock_coingecko):
         """
-            Test the collect_and_store_market_data function.
+        Test the collect_and_store_market_data function.
 
-            This test mocks the CoinGeckoClient to return predefined market data,
-            calls the collect_and_store_market_data function, and verifies that
-            the mock database's add and commit methods were called as expected.
+        This test mocks the CoinGeckoClient to return predefined market data,
+        calls the collect_and_store_market_data function, and verifies that
+        the mock database's add and commit methods were called as expected.
 
-            Args:
-                mock_coingecko: A mocked CoinGeckoClient object.
+        Args:
+            mock_coingecko: A mocked CoinGeckoClient object.
         """
         # Mock the CoinGeckoClient
         mock_coingecko_instance = mock_coingecko.return_value
@@ -54,14 +54,14 @@ class TestCollector(unittest.TestCase):
     @patch("src.data_collection.collector.CoinAPIClient")
     def test_collect_and_store_ohlcv_data(self, mock_coinapi):
         """
-            Test the collect_and_store_ohlcv_data function.
+        Test the collect_and_store_ohlcv_data function.
 
-            This test mocks the CoinAPIClient to return predefined OHLCV data,
-            calls the collect_and_store_ohlcv_data function, and verifies that
-            the mock database's add and commit methods were called as expected.
+        This test mocks the CoinAPIClient to return predefined OHLCV data,
+        calls the collect_and_store_ohlcv_data function, and verifies that
+        the mock database's add and commit methods were called as expected.
 
-            Args:
-                mock_coinapi: A mocked CoinAPIClient object.
+        Args:
+            mock_coinapi: A mocked CoinAPIClient object.
         """
         # Mock the CoinAPIClient
         mock_coinapi_instance = mock_coinapi.return_value
@@ -86,15 +86,15 @@ class TestCollector(unittest.TestCase):
     @patch("src.data_collection.collector.CoinAPIClient")
     def test_collect_historical_data(self, mock_coinapi):
         """
-            Test the collect_historical_data function.
+        Test the collect_historical_data function.
 
-            This test mocks the CoinAPIClient to return historical OHLCV data,
-            calls the collect_historical_data function with specific start and end dates,
-            and verifies that the mock database's add method was called the expected
-            number of times and that commit was called once.
+        This test mocks the CoinAPIClient to return historical OHLCV data,
+        calls the collect_historical_data function with specific start and end dates,
+        and verifies that the mock database's add method was called the expected
+        number of times and that commit was called once.
 
-            Args:
-                mock_coinapi: A mocked CoinAPIClient object.
+        Args:
+            mock_coinapi: A mocked CoinAPIClient object.
         """
         # Mock the CoinAPIClient
         mock_coinapi_instance = mock_coinapi.return_value
@@ -127,15 +127,15 @@ class TestCollector(unittest.TestCase):
     @patch("src.data_collection.collector.collect_and_store_ohlcv_data")
     def test_run_data_collection(self, mock_collect_ohlcv, mock_collect_market):
         """
-            Test the run_data_collection function.
+        Test the run_data_collection function.
 
-            This test mocks both collect_and_store_market_data and collect_and_store_ohlcv_data functions,
-            calls the run_data_collection function, and verifies that both mocked functions
-            were called once with the mock database.
+        This test mocks both collect_and_store_market_data and collect_and_store_ohlcv_data functions,
+        calls the run_data_collection function, and verifies that both mocked functions
+        were called once with the mock database.
 
-            Args:
-                mock_collect_ohlcv: A mocked collect_and_store_ohlcv_data function.
-                mock_collect_market: A mocked collect_and_store_market_data function.
+        Args:
+            mock_collect_ohlcv: A mocked collect_and_store_ohlcv_data function.
+            mock_collect_market: A mocked collect_and_store_market_data function.
         """
         # Call the function
         run_data_collection(self.mock_db)

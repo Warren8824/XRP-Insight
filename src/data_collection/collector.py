@@ -51,7 +51,9 @@ def collect_and_store_market_data(db: Session):
 
         db.add(new_market_data)
         db.commit()
-        data_collection_logger.info(f"Stored market data for timestamp: {new_market_data.timestamp}")
+        data_collection_logger.info(
+            f"Stored market data for timestamp: {new_market_data.timestamp}"
+        )
     except Exception as e:
         db.rollback()
         data_collection_logger.error(f"Error collecting market data: {str(e)}")
@@ -101,7 +103,9 @@ def collect_and_store_ohlcv_data(db: Session):
             db.add(new_ohlcv)
 
         db.commit()
-        data_collection_logger.info(f"Stored OHLCV data for {len(ohlcv_data)} intervals")
+        data_collection_logger.info(
+            f"Stored OHLCV data for {len(ohlcv_data)} intervals"
+        )
     except Exception as e:
         db.rollback()
         data_collection_logger.error(f"Error collecting OHLCV data: {str(e)}")
@@ -166,7 +170,9 @@ def collect_historical_data(db: Session, start_date: datetime, end_date: datetim
                 db.add(new_ohlcv)
 
             db.commit()
-            data_collection_logger.info(f"Stored historical OHLCV data for {current_date.date()}")
+            data_collection_logger.info(
+                f"Stored historical OHLCV data for {current_date.date()}"
+            )
             current_date = next_date
     except Exception as e:
         db.rollback()
