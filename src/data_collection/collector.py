@@ -9,12 +9,8 @@ from src.models.market_data_15_min import MarketData15Min
 from src.models.ohlcv_data_15_min import OHLCVData15Min
 from ..utils.logger import data_collection_logger
 
-# Initialize clients
-coingecko_client = CoinGeckoClient()
-coinapi_client = CoinAPIClient()
 
-
-def collect_and_store_market_data(db: Session):
+def collect_and_store_market_data(db: Session, coingecko_client: CoinGeckoClient = None):
     """
     Collect current market data for XRP from CoinGecko and store it in the database.
 
@@ -31,6 +27,8 @@ def collect_and_store_market_data(db: Session):
     Raises:
         Any exceptions raised by the CoinGecko API or database operations.
     """
+    if coingecko_client is None:
+        coingecko_client = CoinGeckoClient()
     try:
         data_collection_logger.info("Collecting XRP market data from CoinGecko...")
         market_data = coingecko_client.get_market_data()
@@ -60,7 +58,7 @@ def collect_and_store_market_data(db: Session):
         raise
 
 
-def collect_and_store_ohlcv_data(db: Session):
+def collect_and_store_ohlcv_data(db: Session, coinapi_client: CoinAPIClient = None):
     """
     Collect and store the latest OHLCV (Open, High, Low, Close, Volume) data for XRP.
 
@@ -76,6 +74,8 @@ def collect_and_store_ohlcv_data(db: Session):
     Raises:
         Any exceptions raised by the CoinAPI or database operations.
     """
+    if coinapi_client is None:
+        coinapi_client = CoinAPIClient()
     try:
         data_collection_logger.info("Collecting XRP OHLCV data from CoinAPI...")
         ohlcv_data = coinapi_client.get_ohlcv_data()
@@ -199,8 +199,8 @@ def run_data_collection(db: Session):
     """
     try:
         data_collection_logger.info("Starting data collection process...")
-        collect_and_store_market_data(db)
-        collect_and_store_ohlcv_data(db)
+        collect_and_store_market_data(db, coingecko_client)
+        collect_and_store_ohlcv_data(db, coinapi_client)
         data_collection_logger.info("Data collection completed successfully.")
     except Exception as e:
         data_collection_logger.error(f"Error in data collection process: {str(e)}")
