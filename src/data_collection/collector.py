@@ -13,29 +13,26 @@ from ..utils.logger import data_collection_logger
 coingecko_client = CoinGeckoClient()
 coinapi_client = CoinAPIClient()
 
-# Initialize logger
-logger = data_collection_logger
-
 
 def collect_and_store_market_data(db: Session):
     """
-        Collect current market data for XRP from CoinGecko and store it in the database.
+    Collect current market data for XRP from CoinGecko and store it in the database.
 
-        This function retrieves the latest market data for XRP cryptocurrency from the
-        CoinGecko API, including current price, market cap, volume, and supply information.
-        It then stores this data in the provided database.
+    This function retrieves the latest market data for XRP cryptocurrency from the
+    CoinGecko API, including current price, market cap, volume, and supply information.
+    It then stores this data in the provided database.
 
-        Args:
-            db: A database session object for storing the collected data.
+    Args:
+        db: A database session object for storing the collected data.
 
-        Returns:
-            None
+    Returns:
+        None
 
-        Raises:
-            Any exceptions raised by the CoinGecko API or database operations.
+    Raises:
+        Any exceptions raised by the CoinGecko API or database operations.
     """
     try:
-        logger.info("Collecting XRP market data from CoinGecko...")
+        data_collection_logger.info("Collecting XRP market data from CoinGecko...")
         market_data = coingecko_client.get_market_data()
         timestamp_str = market_data["last_updated"]
         timestamp = datetime.fromisoformat(timestamp_str.rstrip("Z")).replace(
@@ -54,31 +51,31 @@ def collect_and_store_market_data(db: Session):
 
         db.add(new_market_data)
         db.commit()
-        logger.info(f"Stored market data for timestamp: {new_market_data.timestamp}")
+        data_collection_logger.info(f"Stored market data for timestamp: {new_market_data.timestamp}")
     except Exception as e:
         db.rollback()
-        logger.error(f"Error collecting market data: {str(e)}")
+        data_collection_logger.error(f"Error collecting market data: {str(e)}")
         raise
 
 
 def collect_and_store_ohlcv_data(db: Session):
     """
-        Collect and store the latest OHLCV (Open, High, Low, Close, Volume) data for XRP.
+    Collect and store the latest OHLCV (Open, High, Low, Close, Volume) data for XRP.
 
-        This function retrieves the most recent OHLCV data for XRP cryptocurrency from
-        the CoinAPI. It then stores this data in the provided database.
+    This function retrieves the most recent OHLCV data for XRP cryptocurrency from
+    the CoinAPI. It then stores this data in the provided database.
 
-        Args:
-            db: A database session object for storing the collected data.
+    Args:
+        db: A database session object for storing the collected data.
 
-        Returns:
-            None
+    Returns:
+        None
 
-        Raises:
-            Any exceptions raised by the CoinAPI or database operations.
+    Raises:
+        Any exceptions raised by the CoinAPI or database operations.
     """
     try:
-        logger.info("Collecting XRP OHLCV data from CoinAPI...")
+        data_collection_logger.info("Collecting XRP OHLCV data from CoinAPI...")
         ohlcv_data = coinapi_client.get_ohlcv_data()
 
         for candle in ohlcv_data:
@@ -104,35 +101,35 @@ def collect_and_store_ohlcv_data(db: Session):
             db.add(new_ohlcv)
 
         db.commit()
-        logger.info(f"Stored OHLCV data for {len(ohlcv_data)} intervals")
+        data_collection_logger.info(f"Stored OHLCV data for {len(ohlcv_data)} intervals")
     except Exception as e:
         db.rollback()
-        logger.error(f"Error collecting OHLCV data: {str(e)}")
+        data_collection_logger.error(f"Error collecting OHLCV data: {str(e)}")
         raise
 
 
 def collect_historical_data(db: Session, start_date: datetime, end_date: datetime):
     """
-        Collect and store historical OHLCV data for XRP within a specified date range.
+    Collect and store historical OHLCV data for XRP within a specified date range.
 
-        This function retrieves historical OHLCV data for XRP cryptocurrency from CoinAPI
-        for the period between start_date and end_date. It then stores this data in the
-        provided database.
+    This function retrieves historical OHLCV data for XRP cryptocurrency from CoinAPI
+    for the period between start_date and end_date. It then stores this data in the
+    provided database.
 
-        Args:
-            db: A database session object for storing the collected data.
-            start_date (datetime): The start date for the historical data collection.
-            end_date (datetime): The end date for the historical data collection.
+    Args:
+        db: A database session object for storing the collected data.
+        start_date (datetime): The start date for the historical data collection.
+        end_date (datetime): The end date for the historical data collection.
 
-        Returns:
-            None
+    Returns:
+        None
 
-        Raises:
-            Any exceptions raised by the CoinAPI or database operations.
+    Raises:
+        Any exceptions raised by the CoinAPI or database operations.
     """
     try:
         current_date = start_date
-        logger.info(
+        data_collection_logger.info(
             f"Collecting historical OHLCV data from {start_date} to {end_date}..."
         )
 
@@ -142,7 +139,7 @@ def collect_historical_data(db: Session, start_date: datetime, end_date: datetim
                 current_date, next_date
             )
 
-            logger.info(
+            data_collection_logger.info(
                 f"Retrieved {len(ohlcv_data)} data points for {current_date.date()}"
             )
 
@@ -169,38 +166,38 @@ def collect_historical_data(db: Session, start_date: datetime, end_date: datetim
                 db.add(new_ohlcv)
 
             db.commit()
-            logger.info(f"Stored historical OHLCV data for {current_date.date()}")
+            data_collection_logger.info(f"Stored historical OHLCV data for {current_date.date()}")
             current_date = next_date
     except Exception as e:
         db.rollback()
-        logger.error(f"Error collecting historical data: {str(e)}")
+        data_collection_logger.error(f"Error collecting historical data: {str(e)}")
         raise
 
 
 def run_data_collection(db: Session):
     """
-       Run the complete data collection process.
+    Run the complete data collection process.
 
-       This function orchestrates the entire data collection process by calling both
-       collect_and_store_market_data() and collect_and_store_ohlcv_data() functions.
-       It's designed to be the main entry point for the data collection routine.
+    This function orchestrates the entire data collection process by calling both
+    collect_and_store_market_data() and collect_and_store_ohlcv_data() functions.
+    It's designed to be the main entry point for the data collection routine.
 
-       Args:
-           db: A database session object for storing the collected data.
+    Args:
+        db: A database session object for storing the collected data.
 
-       Returns:
-           None
+    Returns:
+        None
 
-       Raises:
-           Any exceptions raised by the called functions or database operations.
+    Raises:
+        Any exceptions raised by the called functions or database operations.
     """
     try:
-        logger.info("Starting data collection process...")
+        data_collection_logger.info("Starting data collection process...")
         collect_and_store_market_data(db)
         collect_and_store_ohlcv_data(db)
-        logger.info("Data collection completed successfully.")
+        data_collection_logger.info("Data collection completed successfully.")
     except Exception as e:
-        logger.error(f"Error in data collection process: {str(e)}")
+        data_collection_logger.error(f"Error in data collection process: {str(e)}")
 
 
 if __name__ == "__main__":
