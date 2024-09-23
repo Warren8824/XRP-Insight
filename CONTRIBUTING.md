@@ -136,15 +136,16 @@ To ensure consistency and readability, please follow these guidelines:
 - Commit Messages: Write clear, concise commit messages. Use imperative mood (e.g., "Fix bug in data parsing").
 - Documentation: For any new features, add relevant documentation in the code and, if necessary, update the project documentation.
 
-### Resources
-
+## Resources
 Here are some resources that might be helpful when contributing:
 
-Python Style Guide: [PEP 8 Style Guide](https://peps.python.org/pep-0008/)
-GitHub Flow: GitHub Flow Guide
-How to Write a Good Commit Message: Commit Message Guide
-Black: Black Formatter Documentation
-Flake8: Flake8 Documentation
+- **Python Style Guide**: [PEP 8 Style Guide](https://www.python.org/dev/peps/pep-0008/)
+- **GitHub Flow**: [GitHub Flow Guide](https://guides.github.com/introduction/flow/)
+- **How to Write a Good Commit Message**: [Commit Message Guide](https://chris.beams.io/posts/git-commit/)
+- **Black**: [Black Formatter Documentation](https://black.readthedocs.io/en/stable/)
+- **Flake8**: [Flake8 Documentation](https://flake8.pycqa.org/en/latest/)
+
+---
 
 
 
