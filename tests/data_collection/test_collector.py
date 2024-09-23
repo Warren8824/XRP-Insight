@@ -100,8 +100,8 @@ class TestCollector(unittest.TestCase):
             for minute in range(0, 60, 15)
         ]
         mock_coinapi_instance.get_historical_ohlcv_data.return_value = mock_data[
-            :95
-        ]  # Return only 95 data points
+            :96
+        ]  # Return only 96 data points
 
         # Call the function
         start_date = datetime(2023, 1, 1, tzinfo=timezone.utc)
@@ -109,7 +109,7 @@ class TestCollector(unittest.TestCase):
         collect_historical_data(self.mock_db, start_date, end_date)
 
         # Assert that the database session methods were called
-        self.assertEqual(self.mock_db.add.call_count, 95)  # Expect 95 calls
+        self.assertEqual(self.mock_db.add.call_count, 96)  # Expect 96 calls
         self.mock_db.commit.assert_called_once()
 
     @patch("src.data_collection.collector.collect_and_store_market_data")
