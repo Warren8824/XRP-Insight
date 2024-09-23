@@ -99,7 +99,7 @@ class TestCoinAPIClient(unittest.TestCase):
                 config["api_limits"]["coinapi_daily"],
             ),
         }
-        expected_headers = {"X-CoinAPI-Key": config["api_keys"]["coinapi"], "Accept": "Application/json"}
+        expected_headers = {"X-CoinAPI-Key": config["api_keys"]["coinapi"], "Accept": "application/json"}
         mock_get.assert_called_once_with(
             expected_url, params=expected_params, headers=expected_headers
         )
