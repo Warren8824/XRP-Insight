@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
+import path_setup # Needed to access src folder
 from src.data_collection.collector import collect_historical_data
 from src.models.base import SessionLocal
 from src.utils.logger import scripts_logger as logger
