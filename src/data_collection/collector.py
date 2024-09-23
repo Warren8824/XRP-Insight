@@ -10,7 +10,9 @@ from src.models.ohlcv_data_15_min import OHLCVData15Min
 from ..utils.logger import data_collection_logger
 
 
-def collect_and_store_market_data(db: Session, coingecko_client: CoinGeckoClient = None):
+def collect_and_store_market_data(
+    db: Session, coingecko_client: CoinGeckoClient = None
+):
     """
     Collect current market data for XRP from CoinGecko and store it in the database.
 
