@@ -114,7 +114,12 @@ def collect_and_store_ohlcv_data(db: Session, coinapi_client: CoinAPIClient = No
         raise
 
 
-def collect_historical_data(db: Session, start_date: datetime, end_date: datetime):
+def collect_historical_data(
+    db: Session,
+    start_date: datetime,
+    end_date: datetime,
+    coinapi_client: CoinAPIClient = None,
+):
     """
     Collect and store historical OHLCV data for XRP within a specified date range.
 
@@ -133,6 +138,8 @@ def collect_historical_data(db: Session, start_date: datetime, end_date: datetim
     Raises:
         Any exceptions raised by the CoinAPI or database operations.
     """
+    if coinapi_client is None:
+        coinapi_client = CoinAPIClient()
     try:
         current_date = start_date
         data_collection_logger.info(
@@ -182,22 +189,17 @@ def collect_historical_data(db: Session, start_date: datetime, end_date: datetim
         raise
 
 
-def run_data_collection(db: Session):
+def run_data_collection(
+    db: Session,
+    coingecko_client: CoinGeckoClient = None,
+    coinapi_client: CoinAPIClient = None,
+):
     """
-    Run the complete data collection process.
-
-    This function orchestrates the entire data collection process by calling both
-    collect_and_store_market_data() and collect_and_store_ohlcv_data() functions.
-    It's designed to be the main entry point for the data collection routine.
-
-    Args:
-        db: A database session object for storing the collected data.
-
-    Returns:
-        None
-
-    Raises:
-        Any exceptions raised by the called functions or database operations.
+    Run both market data and ohlcv collect and store functions.
+    :param db:
+    :param coingecko_client: Get market data, get historical data
+    :param coinapi_client: Get ohlcv data, get historical ohlcv data
+    :return: Nothing - Stores data in db
     """
     try:
         data_collection_logger.info("Starting data collection process...")
