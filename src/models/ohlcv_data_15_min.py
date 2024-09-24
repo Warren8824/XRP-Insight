@@ -10,7 +10,6 @@ class OHLCVData15Min(Base):
     __tablename__ = "ohlcv_data_15_min"
 
     timestamp = Column(DateTime(timezone=True), primary_key=True)
-    id = Column(Integer, primary_key=True, index=True)
     open = Column(Float, nullable=False)
     high = Column(Float, nullable=False)
     low = Column(Float, nullable=False)
