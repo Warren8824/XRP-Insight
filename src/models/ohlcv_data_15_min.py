@@ -10,6 +10,7 @@ class OHLCVData15Min(Base):
     __tablename__ = "ohlcv_data_15_min"
 
     timestamp = Column(DateTime(timezone=True), primary_key=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     open = Column(Float, nullable=False)
     high = Column(Float, nullable=False)
     low = Column(Float, nullable=False)
@@ -18,9 +19,9 @@ class OHLCVData15Min(Base):
     price_change = Column(Float, nullable=False)
 
     def __repr__(self):
-        return f"<OHLCV15Data(timestamp={self.timestamp}, close={self.close})>"
+        return f"<OHLCV15Data(id={self.id}, timestamp={self.timestamp}, close={self.close})>"
 
-    @validates("open", "high", "low", "close", "volume", "price_change")
+    @validates("open", "high", "low", "close", "volume")
     def validate_fields(self, key, value):
         # Check for negative values
         if value < 0:
