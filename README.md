@@ -129,7 +129,13 @@ To contribute:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+6. Configure GitHub Secrets for CI Workflow
+
+Our project uses GitHub Actions for Continuous Integration (CI) to run tests and ensure that all changes pass before merging. In order to successfully run the CI workflow, certain environment variables (such as database credentials and API keys) must be set up as GitHub Secrets.
+
+If you want to run the CI tests in your own fork or clone of this repository, you will need to set up the required secrets. Refer to our CONTRIBUTING.md.
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the full process for submitting pull requests.
 
 ## License
 
