@@ -10,7 +10,7 @@ class MarketData15Min(Base):
     __tablename__ = "market_data_15_min"
 
     timestamp = Column(DateTime(timezone=True), primary_key=True)
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     price_usd = Column(Float, nullable=False)
     market_cap = Column(Float, nullable=False)
     total_volume = Column(Float, nullable=False)

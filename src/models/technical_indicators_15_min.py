@@ -10,7 +10,7 @@ class TechnicalIndicators15Min(Base):
     __tablename__ = "technical_indicators_15_min"
 
     timestamp = Column(DateTime(timezone=True), primary_key=True)
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     rsi_14 = Column(Float)
     macd_line = Column(Float)
     macd_signal = Column(Float)
