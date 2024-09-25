@@ -65,7 +65,7 @@ class TestOHLCVData15Min(unittest.TestCase):
         Test the validation of negative values.
 
         This test verifies that:
-        1. A warning is logged when attempting to set negative values for any field.
+        1. A warning is logged when attempting to set negative values for any field except price change.
         2. The negative values are still set (as per the current implementation).
         """
         with self.assertLogs(models_logger, level="WARNING") as cm:
@@ -82,13 +82,12 @@ class TestOHLCVData15Min(unittest.TestCase):
             self.session.add(ohlcv_data)
             self.session.commit()
 
-        self.assertEqual(len(cm.output), 6)  # 6 warnings for 6 negative values
+        self.assertEqual(len(cm.output), 5)  # 5 warnings for 5 negative values
         self.assertIn("Attempted to set negative open: -100.0", cm.output[0])
         self.assertIn("Attempted to set negative high: -90.0", cm.output[1])
         self.assertIn("Attempted to set negative low: -110.0", cm.output[2])
         self.assertIn("Attempted to set negative close: -105.0", cm.output[3])
         self.assertIn("Attempted to set negative volume: -1000000.0", cm.output[4])
-        self.assertIn("Attempted to set negative price_change: -5.0", cm.output[5])
 
         retrieved_data = self.session.query(OHLCVData15Min).filter_by(id=2).first()
         self.assertEqual(retrieved_data.open, -100.0)
