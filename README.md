@@ -102,7 +102,8 @@ xrp-insight/
 - Copy `.env.example` to `.env` and fill in the required API keys and database credentials.
 
 5. Initialize the database: `python scripts/init_db.py`
-6. Backfill historical data (optional): `python scripts/backfill_historical_data.py`
+6. Run unittests: `python -m tests` and ensure all tests pass.
+7. Backfill historical data (optional): `python scripts/backfill_historical_data.py`
 
 ## Usage
 
