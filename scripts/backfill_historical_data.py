@@ -19,4 +19,4 @@ if __name__ == "__main__":
     start_date = end_date - timedelta(days=1)  # Start with just 1 day
     logger.info(f"Starting historical data backfill from {start_date} to {end_date}")
     bf_data(start_date, end_date)
-    logger.info("Historical data backfill completed")
+    logger.info("Historical data back-fill completed")
