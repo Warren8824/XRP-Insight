@@ -94,7 +94,7 @@ xrp-insight/
 
 ### Installation
 
-1. Clone the repository: `git clone https://github.com/yourusername/xrp-insight.git`
+1. Clone the repository: `git clone https://github.com/Warren8824/xrp-insight.git`
 `cd xrp-insight`
 2. Set up a virtual environment: `python -m venv venv` `source venv/bin/activate`  # On Windows: `venv\Scripts\activate`
 3. Install dependencies: `pip install -r requirements.txt`
