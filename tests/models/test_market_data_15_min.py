@@ -22,13 +22,16 @@ class TestMarketData15Min(unittest.TestCase):
         cls.Session = sessionmaker(bind=engine)
 
     def setUp(self):
-        """Create a new session for each test."""
+        """Create a new session and begin a nested transaction for each test."""
         self.session = self.Session()
+        # Start a new transaction for the test case
+        self.transaction = self.session.begin_nested()
 
     def tearDown(self):
-        """Close the session after each test."""
-        self.session.rollback()
-        self.session.close()
+        """Rollback the nested transaction and close the session after each test."""
+        if self.transaction.is_active:
+            self.transaction.rollback()  # Rollback only if the transaction is still active
+        self.session.close()  # Close the session
 
     def test_market_data_creation(self):
         """
