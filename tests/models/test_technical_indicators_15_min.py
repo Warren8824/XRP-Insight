@@ -7,6 +7,7 @@ from src.models.technical_indicators_15_min import TechnicalIndicators15Min
 from src.models.base import Base, engine
 from src.models import models_logger
 
+
 class TestTechnicalIndicators15Min(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -60,7 +61,9 @@ class TestTechnicalIndicators15Min(unittest.TestCase):
         self.session.add(indicators)
         self.session.flush()  # Flush to get the ID, but don't commit
 
-        retrieved_data = self.session.query(TechnicalIndicators15Min).filter_by(id=1).first()
+        retrieved_data = (
+            self.session.query(TechnicalIndicators15Min).filter_by(id=1).first()
+        )
         self.assertIsNotNone(retrieved_data)
         self.assertEqual(retrieved_data.rsi_14, 50.0)
         self.assertEqual(retrieved_data.macd_line, 0.5)
@@ -86,7 +89,9 @@ class TestTechnicalIndicators15Min(unittest.TestCase):
             self.session.flush()  # Flush to trigger SQL, but don't commit
 
         self.assertIn("Invalid RSI value: 150.0", cm.output[0])
-        retrieved_data = self.session.query(TechnicalIndicators15Min).filter_by(id=2).first()
+        retrieved_data = (
+            self.session.query(TechnicalIndicators15Min).filter_by(id=2).first()
+        )
         self.assertEqual(retrieved_data.rsi_14, 150.0)
 
     def test_negative_value_validation(self):
@@ -117,9 +122,12 @@ class TestTechnicalIndicators15Min(unittest.TestCase):
         self.assertIn("Negative value for sma_50: -102.0", cm.output[5])
         self.assertIn("Negative value for sma_200: -95.0", cm.output[6])
 
-        retrieved_data = self.session.query(TechnicalIndicators15Min).filter_by(id=3).first()
+        retrieved_data = (
+            self.session.query(TechnicalIndicators15Min).filter_by(id=3).first()
+        )
         self.assertEqual(retrieved_data.bb_upper, -110.0)
         self.assertEqual(retrieved_data.ema_12, -105.0)
+
 
 if __name__ == "__main__":
     unittest.main()

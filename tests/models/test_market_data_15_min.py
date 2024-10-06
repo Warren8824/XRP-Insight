@@ -57,7 +57,9 @@ class TestMarketData15Min(unittest.TestCase):
         self.session.add(market_data)
         self.session.flush()  # Flush to get the ID, but don't commit
 
-        retrieved_data = self.session.query(MarketData15Min).filter_by(id=market_data.id).first()
+        retrieved_data = (
+            self.session.query(MarketData15Min).filter_by(id=market_data.id).first()
+        )
         self.assertIsNotNone(retrieved_data)
         self.assertEqual(retrieved_data.price_usd, 100.0)
         self.assertEqual(retrieved_data.market_cap, 1000000.0)
@@ -78,7 +80,9 @@ class TestMarketData15Min(unittest.TestCase):
             self.session.flush()  # Flush to trigger SQL, but don't commit
 
         self.assertIn("Attempted to set negative price_usd: -100.0", cm.output[0])
-        retrieved_data = self.session.query(MarketData15Min).filter_by(id=market_data.id).first()
+        retrieved_data = (
+            self.session.query(MarketData15Min).filter_by(id=market_data.id).first()
+        )
         self.assertEqual(retrieved_data.price_usd, -100.0)
 
     def test_market_cap_validation(self):
@@ -96,7 +100,9 @@ class TestMarketData15Min(unittest.TestCase):
             self.session.flush()  # Flush to trigger SQL, but don't commit
 
         self.assertIn("Attempted to set negative market_cap: -1000000.0", cm.output[0])
-        retrieved_data = self.session.query(MarketData15Min).filter_by(id=market_data.id).first()
+        retrieved_data = (
+            self.session.query(MarketData15Min).filter_by(id=market_data.id).first()
+        )
         self.assertEqual(retrieved_data.market_cap, -1000000.0)
 
 
