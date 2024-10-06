@@ -19,9 +19,21 @@ TechnicalIndicators15Min = models["TechnicalIndicators15Min"]
 
 # Define global table information
 TABLES = [
-    {"name": "market_data_15_min", "model": MarketData15Min, "timestamp_column": "timestamp"},
-    {"name": "ohlcv_data_15_min", "model": OHLCVData15Min, "timestamp_column": "timestamp"},
-    {"name": "technical_indicators_15_min", "model": TechnicalIndicators15Min, "timestamp_column": "timestamp"},
+    {
+        "name": "market_data_15_min",
+        "model": MarketData15Min,
+        "timestamp_column": "timestamp",
+    },
+    {
+        "name": "ohlcv_data_15_min",
+        "model": OHLCVData15Min,
+        "timestamp_column": "timestamp",
+    },
+    {
+        "name": "technical_indicators_15_min",
+        "model": TechnicalIndicators15Min,
+        "timestamp_column": "timestamp",
+    },
 ]
 
 
@@ -68,36 +80,58 @@ def drop_all_data(engine):
     with engine.connect() as conn:
         for table in TABLES:
             table_name = table["name"]
-            row_count_before = conn.execute(text(f"SELECT COUNT(*) FROM {table_name}")).scalar()
-            scripts_logger.info(f"Table {table_name} has {row_count_before} rows before deletion.")
+            row_count_before = conn.execute(
+                text(f"SELECT COUNT(*) FROM {table_name}")
+            ).scalar()
+            scripts_logger.info(
+                f"Table {table_name} has {row_count_before} rows before deletion."
+            )
 
             truncate_command = f"TRUNCATE TABLE {table_name} CASCADE"
             scripts_logger.info(f"Executing command: {truncate_command}")
             conn.execute(text(truncate_command))
             conn.commit()
 
-            row_count_after = conn.execute(text(f"SELECT COUNT(*) FROM {table_name}")).scalar()
-            scripts_logger.info(f"Table {table_name} has {row_count_after} rows after deletion.")
+            row_count_after = conn.execute(
+                text(f"SELECT COUNT(*) FROM {table_name}")
+            ).scalar()
+            scripts_logger.info(
+                f"Table {table_name} has {row_count_after} rows after deletion."
+            )
 
             if row_count_after != 0:
-                scripts_logger.warning(f"Warning: Data in {table_name} was not deleted as expected.")
+                scripts_logger.warning(
+                    f"Warning: Data in {table_name} was not deleted as expected."
+                )
 
 
 def prompt_user_for_action(engine):
     with engine.connect() as connection:
         for table in TABLES:
             table_name = table["name"]
-            row_count = connection.execute(text(f"SELECT COUNT(*) FROM {table_name};")).scalar()
+            row_count = connection.execute(
+                text(f"SELECT COUNT(*) FROM {table_name};")
+            ).scalar()
 
             if row_count > 0:
-                user_input = input(f"Table {table_name} has {row_count} rows. Do you want to delete all data from this table and begin fresh? (yes/no): ").strip().lower()
+                user_input = (
+                    input(
+                        f"Table {table_name} has {row_count} rows. Do you want to delete all data from this table and begin fresh? (yes/no): "
+                    )
+                    .strip()
+                    .lower()
+                )
 
-                if user_input == 'yes':
+                if user_input == "yes":
                     connection.execute(text(f"TRUNCATE TABLE {table_name} CASCADE;"))
-                    connection.commit() # Complete the truncation of the data
-                    scripts_logger.info(f"All data from {table_name} has been truncated.")
-                elif user_input == 'no':
-                    scripts_logger.info(f"Continuing with the existing data in {table_name}.")
+                    connection.commit()  # Complete the truncation of the data
+                    scripts_logger.info(
+                        f"All data from {table_name} has been truncated."
+                    )
+                elif user_input == "no":
+                    scripts_logger.info(
+                        f"Continuing with the existing data in {table_name}."
+                    )
                 else:
                     print("Invalid input. Please enter 'yes' or 'no'.")
                     return prompt_user_for_action(engine)  # Recursively prompt again
@@ -150,7 +184,9 @@ def init_db():
                                 exc_info=True,
                             )
                     else:
-                        scripts_logger.warning(f"Table {table_name} does not exist (should have been created)")
+                        scripts_logger.warning(
+                            f"Table {table_name} does not exist (should have been created)"
+                        )
 
     except OperationalError as e:
         scripts_logger.error(f"Database connection error: {str(e)}")
@@ -166,7 +202,9 @@ def main():
         init_db()
         scripts_logger.info("Database initialization script finished.")
     except Exception as e:
-        scripts_logger.error(f"Error during database initialization: {e}", exc_info=True)
+        scripts_logger.error(
+            f"Error during database initialization: {e}", exc_info=True
+        )
 
 
 if __name__ == "__main__":
