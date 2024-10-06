@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import SQLAlchemyError
 from src.models import get_models, models_logger
 from src.models.base import Base, engine
 
@@ -11,43 +11,43 @@ OHLCVData15Min = models["OHLCVData15Min"]
 
 
 class TestOHLCVData15Min(unittest.TestCase):
-    """
-    A test suite for the OHLCVData15Min model.
-
-    This class contains unit tests for the OHLCVData15Min model,
-    including its initialization, validation, and event listeners.
-    """
-
     @classmethod
     def setUpClass(cls):
         """Set up the test database and session."""
-        Base.metadata.create_all(engine)
         cls.Session = sessionmaker(bind=engine)
+        cls.engine = engine
 
     def setUp(self):
-        """Create a new session and begin a nested transaction for each test."""
+        """Create a new session for each test."""
         self.session = self.Session()
-        # Start a new transaction for the test case
-        self.transaction = self.session.begin_nested()
+        self.session.begin_nested()  # Start a savepoint
 
     def tearDown(self):
-        """Rollback the nested transaction and close the session after each test."""
-        if self.transaction.is_active:
-            self.transaction.rollback()  # Rollback only if the transaction is still active
-        self.session.close()  # Close the session
+        """Rollback to the savepoint and close the session after each test."""
+        self.session.rollback()  # Rollback to the savepoint
+        self.session.close()
+
+    @classmethod
+    def tearDownClass(cls):
+        """Clean up all test data after all tests are done."""
+        session = cls.Session()
+        try:
+            # Delete all data inserted during the tests
+            session.query(OHLCVData15Min).delete()
+            session.commit()
+        except SQLAlchemyError as e:
+            session.rollback()
+            models_logger.error(f"Error during test data cleanup: {str(e)}")
+        except Exception as e:
+            session.rollback()
+            models_logger.error(f"Unexpected error during test data cleanup: {str(e)}")
+        finally:
+            session.close()
 
     def test_ohlcv_data_creation(self):
-        """
-        Test the creation of an OHLCVData15Min instance.
-
-        This test verifies that:
-        1. An OHLCVData15Min instance can be created with valid data.
-        2. The instance can be added to the session and committed to the database.
-        3. The data can be retrieved from the database correctly.
-        """
         ohlcv_data = OHLCVData15Min(
+            id=1,  # Explicitly set the ID
             timestamp=datetime.now(),
-            id=1,
             open=100.0,
             high=110.0,
             low=90.0,
@@ -56,7 +56,7 @@ class TestOHLCVData15Min(unittest.TestCase):
             price_change=5.0,
         )
         self.session.add(ohlcv_data)
-        self.session.commit()
+        self.session.flush()  # Flush to get the ID, but don't commit
 
         retrieved_data = self.session.query(OHLCVData15Min).filter_by(id=1).first()
         self.assertIsNotNone(retrieved_data)
@@ -64,17 +64,10 @@ class TestOHLCVData15Min(unittest.TestCase):
         self.assertEqual(retrieved_data.close, 105.0)
 
     def test_negative_value_validation(self):
-        """
-        Test the validation of negative values.
-
-        This test verifies that:
-        1. A warning is logged when attempting to set negative values for any field except price change.
-        2. The negative values are still set (as per the current implementation).
-        """
         with self.assertLogs(models_logger, level="WARNING") as cm:
             ohlcv_data = OHLCVData15Min(
+                id=2,  # Explicitly set the ID
                 timestamp=datetime.now(),
-                id=2,
                 open=-100.0,
                 high=-90.0,
                 low=-110.0,
@@ -83,7 +76,7 @@ class TestOHLCVData15Min(unittest.TestCase):
                 price_change=-5.0,
             )
             self.session.add(ohlcv_data)
-            self.session.commit()
+            self.session.flush()  # Flush to trigger SQL, but don't commit
 
         self.assertEqual(len(cm.output), 5)  # 5 warnings for 5 negative values
         self.assertIn("Attempted to set negative open: -100.0", cm.output[0])
@@ -97,17 +90,10 @@ class TestOHLCVData15Min(unittest.TestCase):
         self.assertEqual(retrieved_data.volume, -1000000.0)
 
     def test_high_low_validation(self):
-        """
-        Test the validation of high and low values.
-
-        This test verifies that:
-        1. A warning is logged when the high value is less than the low value.
-        2. The values are still set (as per the current implementation).
-        """
         with self.assertLogs(models_logger, level="WARNING") as cm:
             ohlcv_data = OHLCVData15Min(
+                id=3,  # Explicitly set the ID
                 timestamp=datetime.now(),
-                id=3,
                 open=100.0,
                 low=110.0,
                 high=90.0,  # High less than low
@@ -116,7 +102,7 @@ class TestOHLCVData15Min(unittest.TestCase):
                 price_change=5.0,
             )
             self.session.add(ohlcv_data)
-            self.session.commit()
+            self.session.flush()  # Flush to trigger SQL, but don't commit
 
         self.assertIn("High value 90.0 is less than low value 110.0", cm.output[0])
 
