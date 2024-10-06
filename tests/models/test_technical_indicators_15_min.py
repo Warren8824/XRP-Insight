@@ -1,50 +1,50 @@
 import unittest
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import SQLAlchemyError
+
 from src.models.technical_indicators_15_min import TechnicalIndicators15Min
 from src.models.base import Base, engine
 from src.models import models_logger
 
-
 class TestTechnicalIndicators15Min(unittest.TestCase):
-    """
-    A test suite for the TechnicalIndicators15Min model.
-
-    This class contains unit tests for the TechnicalIndicators15Min model,
-    including its initialization, validation, and event listeners.
-    """
-
     @classmethod
     def setUpClass(cls):
         """Set up the test database and session."""
-        Base.metadata.create_all(engine)
         cls.Session = sessionmaker(bind=engine)
+        cls.engine = engine
 
     def setUp(self):
-        """Create a new session and begin a nested transaction for each test."""
+        """Create a new session for each test."""
         self.session = self.Session()
-        # Start a new transaction for the test case
-        self.transaction = self.session.begin_nested()
+        self.session.begin_nested()  # Start a savepoint
 
     def tearDown(self):
-        """Rollback the nested transaction and close the session after each test."""
-        if self.transaction.is_active:
-            self.transaction.rollback()  # Rollback only if the transaction is still active
-        self.session.close()  # Close the session
+        """Rollback to the savepoint and close the session after each test."""
+        self.session.rollback()  # Rollback to the savepoint
+        self.session.close()
+
+    @classmethod
+    def tearDownClass(cls):
+        """Clean up all test data after all tests are done."""
+        session = cls.Session()
+        try:
+            # Delete all data inserted during the tests
+            session.query(TechnicalIndicators15Min).delete()
+            session.commit()
+        except SQLAlchemyError as e:
+            session.rollback()
+            models_logger.error(f"Error during test data cleanup: {str(e)}")
+        except Exception as e:
+            session.rollback()
+            models_logger.error(f"Unexpected error during test data cleanup: {str(e)}")
+        finally:
+            session.close()
 
     def test_technical_indicators_creation(self):
-        """
-        Test the creation of a TechnicalIndicators15Min instance.
-
-        This test verifies that:
-        1. A TechnicalIndicators15Min instance can be created with valid data.
-        2. The instance can be added to the session and committed to the database.
-        3. The data can be retrieved from the database correctly.
-        """
         indicators = TechnicalIndicators15Min(
+            id=1,  # Explicitly set the ID
             timestamp=datetime.now(),
-            id=1,
             rsi_14=50.0,
             macd_line=0.5,
             macd_signal=0.3,
@@ -58,27 +58,18 @@ class TestTechnicalIndicators15Min(unittest.TestCase):
             sma_200=95.0,
         )
         self.session.add(indicators)
-        self.session.commit()
+        self.session.flush()  # Flush to get the ID, but don't commit
 
-        retrieved_data = (
-            self.session.query(TechnicalIndicators15Min).filter_by(id=1).first()
-        )
+        retrieved_data = self.session.query(TechnicalIndicators15Min).filter_by(id=1).first()
         self.assertIsNotNone(retrieved_data)
         self.assertEqual(retrieved_data.rsi_14, 50.0)
         self.assertEqual(retrieved_data.macd_line, 0.5)
 
     def test_rsi_validation(self):
-        """
-        Test the validation of the RSI field.
-
-        This test verifies that:
-        1. A warning is logged when attempting to set an RSI value outside the 0-100 range.
-        2. The invalid value is still set (as per the current implementation).
-        """
         with self.assertLogs(models_logger, level="WARNING") as cm:
             indicators = TechnicalIndicators15Min(
+                id=2,  # Explicitly set the ID
                 timestamp=datetime.now(),
-                id=2,
                 rsi_14=150.0,  # Invalid RSI value
                 macd_line=0.5,
                 macd_signal=0.3,
@@ -92,27 +83,17 @@ class TestTechnicalIndicators15Min(unittest.TestCase):
                 sma_200=95.0,
             )
             self.session.add(indicators)
-            self.session.commit()
+            self.session.flush()  # Flush to trigger SQL, but don't commit
 
         self.assertIn("Invalid RSI value: 150.0", cm.output[0])
-
-        retrieved_data = (
-            self.session.query(TechnicalIndicators15Min).filter_by(id=2).first()
-        )
+        retrieved_data = self.session.query(TechnicalIndicators15Min).filter_by(id=2).first()
         self.assertEqual(retrieved_data.rsi_14, 150.0)
 
     def test_negative_value_validation(self):
-        """
-        Test the validation of negative values for certain fields.
-
-        This test verifies that:
-        1. A warning is logged when attempting to set negative values for fields that should be positive.
-        2. The negative values are still set (as per the current implementation).
-        """
         with self.assertLogs(models_logger, level="WARNING") as cm:
             indicators = TechnicalIndicators15Min(
+                id=3,  # Explicitly set the ID
                 timestamp=datetime.now(),
-                id=3,
                 rsi_14=50.0,
                 macd_line=0.5,
                 macd_signal=0.3,
@@ -126,7 +107,7 @@ class TestTechnicalIndicators15Min(unittest.TestCase):
                 sma_200=-95.0,  # Negative value
             )
             self.session.add(indicators)
-            self.session.commit()
+            self.session.flush()  # Flush to trigger SQL, but don't commit
 
         self.assertIn("Negative value for bb_upper: -110.0", cm.output[0])
         self.assertIn("Negative value for bb_middle: -100.0", cm.output[1])
@@ -136,12 +117,9 @@ class TestTechnicalIndicators15Min(unittest.TestCase):
         self.assertIn("Negative value for sma_50: -102.0", cm.output[5])
         self.assertIn("Negative value for sma_200: -95.0", cm.output[6])
 
-        retrieved_data = (
-            self.session.query(TechnicalIndicators15Min).filter_by(id=3).first()
-        )
+        retrieved_data = self.session.query(TechnicalIndicators15Min).filter_by(id=3).first()
         self.assertEqual(retrieved_data.bb_upper, -110.0)
         self.assertEqual(retrieved_data.ema_12, -105.0)
-
 
 if __name__ == "__main__":
     unittest.main()
