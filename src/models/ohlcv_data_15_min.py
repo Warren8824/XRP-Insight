@@ -9,7 +9,7 @@ from src.utils.logger import models_logger
 class OHLCVData15Min(Base):
     __tablename__ = "ohlcv_data_15_min"
 
-    timestamp = Column(DateTime(timezone=True), primary_key=True)
+    timestamp = Column(DateTime(timezone=True), primary_key=True, index=True)
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     open = Column(Float, nullable=False)
     high = Column(Float, nullable=False)
