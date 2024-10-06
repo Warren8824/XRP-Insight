@@ -13,3 +13,4 @@ api_endpoints:
 
 api_limits:
     coinapi_daily: 100
+    coingecko_daily: None

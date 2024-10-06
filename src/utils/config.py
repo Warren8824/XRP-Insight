@@ -34,6 +34,11 @@ def load_config():
             "coinapi_daily", None
         )
 
+        # Set the coingecko daily limit
+        config["api_limits"]["coingecko_daily"] = config.get("api_limits", {}).get(
+            "coingecko_daily", None
+        )
+
         # Update configuration with environment variables
         config["data_collection"]["interval_seconds"] = (
             config["data_collection"].get("interval_minutes", 15) * 60
