@@ -37,10 +37,6 @@ class OHLCVData15Min(Base):
                     models_logger.warning(
                         f"High value {value} is less than low value {other_value}"
                     )
-                elif key == "low" and value > other_value:
-                    models_logger.warning(
-                        f"Low value {value} is greater than high value {other_value}"
-                    )
 
         return value
 
