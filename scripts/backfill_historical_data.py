@@ -4,7 +4,7 @@ import path_setup # Needed to access src folder
 from src.data_collection.collector import collect_historical_data
 from src.models.base import SessionLocal
 from src.utils.logger import scripts_logger as logger
-
+from src.utils.config import config
 
 def bf_data(start_date, end_date):
     db = SessionLocal()

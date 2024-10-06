@@ -78,13 +78,12 @@ class CoinAPIClient:
             requests.exceptions.RequestException: If there's an error in the API request.
         """
         endpoint = f"{self.base_url}/ohlcv/BITSTAMP_SPOT_XRP_USD/history"
-        params = {
-            "period_id": "15MIN",
-            "time_start": start_time.isoformat()
-        }
+        params = {"period_id": "15MIN", "time_start": start_time.isoformat()}
         if end_time:
             params["time_end"] = end_time.isoformat()
-            params["limit"] = min(limit, self.daily_limit)  # Ensure we don't exceed daily limit(100 candles equals one api call credit)
+            params["limit"] = min(
+                limit, self.daily_limit
+            )  # Ensure we don't exceed daily limit(100 candles equals one api call credit)
 
         headers = {"X-CoinAPI-Key": self.api_key, "Accept": "application/json"}
 
@@ -98,6 +97,6 @@ class CoinAPIClient:
             return response.json()
         except requests.exceptions.RequestException as e:
             self.logger.error(f"Error retrieving historical OHLCV data: {str(e)}")
-            if hasattr(e.response, 'text'):
+            if hasattr(e.response, "text"):
                 self.logger.error(f"Response content: {e.response.text}")
             raise
