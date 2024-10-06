@@ -51,6 +51,14 @@ Ready to dive in? Star ⭐ this repo and check out our [Contribution Guidelines]
 
 ```
 xrp-insight/
+├── config/
+│   └── config.yml
+├── docs/
+├── logs/
+├── scripts/
+│   ├── init_db.py
+│   ├── backfill_historical_data.py
+|   └── path_setup.py
 ├── src/
 │   ├── ai_integration/
 |   |   └── __init__.py
@@ -83,10 +91,6 @@ xrp-insight/
 |   ├── __init__.py
 |   ├── app.py
 |   └── constants.py
-├── scripts/
-│   ├── init_db.py
-│   └── backfill_historical_data.py
-|   └── path_setup.py
 ├── tests/
 │   ├── ai_integration/
 |   |   └── __init__.py
@@ -117,9 +121,6 @@ xrp-insight/
 |   |   └── test_logger.py
 │   ├── __init__.py
 │   └── __main__.py
-├── config/
-│   └── config.yml
-├── docs/
 ├── requirements.txt
 ├── docker-compose.yml
 └── README.md
