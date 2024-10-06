@@ -51,33 +51,76 @@ Ready to dive in? Star ⭐ this repo and check out our [Contribution Guidelines]
 
 ```
 xrp-insight/
+├── config/
+│   └── config.yml
+├── docs/
+├── logs/
+├── scripts/
+│   ├── init_db.py
+│   ├── backfill_historical_data.py
+|   └── path_setup.py
 ├── src/
 │   ├── ai_integration/
+|   |   └── __init__.py
 │   ├── analysis/
+|   |   └── __init__.py
 │   ├── api/
+|   |   └── __init__.py
 │   ├── content_generation/
+|   |   └── __init__.py
 │   ├── data_collection/
+|   |   ├── __init__.py
 │   │   ├── coinapi_client.py
 │   │   ├── coingecko_client.py
 │   │   └── collector.py
 │   ├── data_processing/
+|   |   ├── __init__.py
 │   │   └── indicators.py
 │   ├── models/
+|   |   ├── __init__.py
+|   |   ├── base.py
 │   │   ├── market_data_15_min.py
 │   │   ├── ohlcv_data_15_min.py
 │   │   └── technical_indicators_15_min.py
 │   ├── scheduler/
-│   │   └── tasks.py
+|   |   └──__init__.py
 │   └── utils/
-│       ├── config.py
-│       └── logger.py
-├── scripts/
-│   ├── init_db.py
-│   └── backfill_historical_data.py
+|   |   ├── __init__.py
+│   |   ├── config.py
+│   |   └── logger.py
+|   ├── __init__.py
+|   ├── app.py
+|   └── constants.py
 ├── tests/
-├── config/
-│   └── config.yml
-├── docs/
+│   ├── ai_integration/
+|   |   └── __init__.py
+│   ├── analysis/
+|   |   └── __init__.py
+│   ├── api/
+|   |   └── __init__.py
+│   ├── content_generation/
+|   |   └── __init__.py
+│   ├── data_collection/
+│   ├── __init__.py
+│   ├── test_coinapi_client.py
+│   ├── test_coingecko_clientpy
+│   └── test_collector.py
+│   ├── data_processing/
+|   |   └── __init__.py
+│   ├── models/
+|   |   ├── __init__.py
+|   │   ├── test_base.py
+|   │   ├── test_market_data_15_min.py
+|   │   ├── test_ohlcv_data_15_min.py
+|   |   └── test_technical_indicators_15_min .py
+│   ├── scheduler/
+|   |   └── __init__.py
+│   ├── utils/
+|   |   ├── __init__.py
+|   |   ├── test_config.py
+|   |   └── test_logger.py
+│   ├── __init__.py
+│   └── __main__.py
 ├── requirements.txt
 ├── docker-compose.yml
 └── README.md
