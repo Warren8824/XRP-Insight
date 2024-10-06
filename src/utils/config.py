@@ -29,6 +29,9 @@ def load_config():
         }
         utils_logger.info("Merged API keys with environment variables.")
 
+        # Set the coinapi daily limit
+        config['api_limits']['coinapi_daily'] = config.get("api_limits", {}).get("coinapi_daily", None)
+
         # Update configuration with environment variables
         config["data_collection"]["interval_seconds"] = (
             config["data_collection"].get("interval_minutes", 15) * 60
