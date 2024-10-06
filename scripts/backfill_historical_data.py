@@ -16,7 +16,7 @@ OHLCVData15Min = models["OHLCVData15Min"]
 # Constants
 API_CALLS_PER_DAY = 96  # 15-minute intervals for 24 hours
 ROWS_PER_API_CALL = 100
-DAILY_LIMIT = config['api_limits']['coinapi_daily']
+DAILY_LIMIT = config["api_limits"]["coinapi_daily"]
 MAX_BACKFILL_DAYS = 100
 
 
@@ -61,21 +61,27 @@ def calculate_missing_intervals(last_timestamp, current_time):
 def prompt_user_for_days():
     while True:
         try:
-            days = int(input("How many days of historical data do you want to retrieve? "))
+            days = int(
+                input("How many days of historical data do you want to retrieve? ")
+            )
             if days <= 0:
                 print("Please enter a positive number of days.")
                 continue
 
             api_calls = calculate_api_calls(days * API_CALLS_PER_DAY)
-            print(f"Retrieving {days} days of data will require approximately {api_calls} API calls.")
+            print(
+                f"Retrieving {days} days of data will require approximately {api_calls} API calls."
+            )
 
             if api_calls > DAILY_LIMIT:
-                print(f"Warning: This exceeds the daily limit of {DAILY_LIMIT} API calls.")
+                print(
+                    f"Warning: This exceeds the daily limit of {DAILY_LIMIT} API calls."
+                )
 
             confirm = input("Do you want to proceed? (y/n): ").lower()
-            if confirm == 'y':
+            if confirm == "y":
                 return days
-            elif confirm == 'n':
+            elif confirm == "n":
                 print("Operation cancelled.")
                 return None
             else:
@@ -94,9 +100,9 @@ def prompt_user_for_backfill(missing_intervals):
 
     while True:
         confirm = input("Do you want to proceed with the back-fill? (y/n): ").lower()
-        if confirm == 'y':
+        if confirm == "y":
             return True
-        elif confirm == 'n':
+        elif confirm == "n":
             return False
         else:
             print("Invalid input. Please enter 'y' or 'n'.")
@@ -113,13 +119,17 @@ if __name__ == "__main__":
             start_date = round_to_15_minutes(current_time - timedelta(days=days))
             end_date = current_time
 
-            logger.info(f"Starting historical data back-fill from {start_date} to {end_date}")
+            logger.info(
+                f"Starting historical data back-fill from {start_date} to {end_date}"
+            )
             bf_data(start_date, end_date)
 
             api_calls_used = calculate_api_calls(days * API_CALLS_PER_DAY)
             update_daily_limit(api_calls_used)
 
-            logger.info(f"Historical data back-fill completed. {api_calls_used} API calls used.")
+            logger.info(
+                f"Historical data back-fill completed. {api_calls_used} API calls used."
+            )
             logger.info(f"Remaining daily API calls: {DAILY_LIMIT}")
         else:
             logger.info("Historical data back-fill cancelled by user.")
@@ -128,19 +138,24 @@ if __name__ == "__main__":
 
         if missing_intervals > MAX_BACKFILL_DAYS * API_CALLS_PER_DAY:
             logger.info(
-                f"The data gap is more than {MAX_BACKFILL_DAYS} days. Please run init_db.py to reset all tables.")
+                f"The data gap is more than {MAX_BACKFILL_DAYS} days. Please run init_db.py to reset all tables."
+            )
         else:
             if prompt_user_for_backfill(missing_intervals):
                 start_date = round_to_15_minutes(last_timestamp + timedelta(minutes=15))
                 end_date = current_time
 
-                logger.info(f"Starting historical data back-fill from {start_date} to {end_date}")
+                logger.info(
+                    f"Starting historical data back-fill from {start_date} to {end_date}"
+                )
                 bf_data(start_date, end_date)
 
                 api_calls_used = calculate_api_calls(missing_intervals)
                 update_daily_limit(api_calls_used)
 
-                logger.info(f"Historical data back-fill completed. {api_calls_used} API calls used.")
+                logger.info(
+                    f"Historical data back-fill completed. {api_calls_used} API calls used."
+                )
                 logger.info(f"Remaining daily API calls: {DAILY_LIMIT}")
             else:
                 logger.info("Historical data back-fill cancelled by user.")
