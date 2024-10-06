@@ -16,7 +16,12 @@ class TestConfig(unittest.TestCase):
     @patch(
         "src.utils.config.open",
         new_callable=mock_open,
-        read_data="data_collection:\n  interval_minutes: 30",
+        read_data=(
+            "data_collection:\n"
+            "  interval_minutes: 30\n"
+            "api_limits:\n"
+            "  coinapi_daily: 100\n"
+        ),
     )
     @patch.dict(
         os.environ,
@@ -50,6 +55,9 @@ class TestConfig(unittest.TestCase):
         # Test YAML loading
         self.assertEqual(config["data_collection"]["interval_minutes"], 30)
         self.assertEqual(config["data_collection"]["interval_seconds"], 1800)
+
+        # Test coinapi_daily limit loading
+        self.assertEqual(config["api_limits"]["coinapi_daily"], 100)
 
         # Test API key loading
         self.assertEqual(config["api_keys"]["coingecko"], "fake_coingecko_key")
