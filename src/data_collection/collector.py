@@ -141,7 +141,9 @@ def collect_historical_data(
     if coinapi_client is None:
         coinapi_client = CoinAPIClient()
     try:
-        current_date = start_date
+        current_date = start_date + timedelta(
+            minutes=15
+        )  # Add 15 minutes to ensure most recent timestamp is collected
         data_collection_logger.info(
             f"Collecting historical OHLCV data from {start_date} to {end_date}..."
         )

@@ -83,8 +83,7 @@ class CoinAPIClient:
         params = {"period_id": "15MIN", "time_start": start_time.isoformat()}
 
         if end_time:
-            # Add one interval to ensure we include the end_time data
-            params["time_end"] = (end_time + timedelta(minutes=15)).isoformat()
+            params["time_end"] = end_time.isoformat()
             params["limit"] = min(
                 limit, self.daily_limit
             )  # Ensure we don't exceed daily limit(100 candles equals one api call credit)

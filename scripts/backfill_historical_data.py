@@ -148,7 +148,7 @@ if __name__ == "__main__":
             )
         else:
             if prompt_user_for_backfill(missing_intervals):
-                start_date = last_timestamp + timedelta(minutes=15)
+                start_date = last_timestamp
                 end_date = round_to_15_minutes(current_time)
 
                 logger.info(
