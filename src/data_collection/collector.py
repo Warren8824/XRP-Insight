@@ -183,7 +183,9 @@ def collect_historical_data(
                 f"Stored historical OHLCV data for {current_date.date()}"
             )
             current_date = next_date
-            if current_date >= end_date: # Break loop after collecting most recent timestamp
+            if (
+                current_date >= end_date
+            ):  # Break loop after collecting most recent timestamp
                 break
     except Exception as e:
         db.rollback()
