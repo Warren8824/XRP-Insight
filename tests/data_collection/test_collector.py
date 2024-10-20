@@ -62,6 +62,7 @@ class TestCollector(unittest.TestCase):
                 "price_low": 0.9,
                 "price_close": 1.05,
                 "volume_traded": 1000000,
+                "trades_count": 8,
             }
         ]
 
@@ -95,6 +96,7 @@ class TestCollector(unittest.TestCase):
                 "price_low": 0.9,
                 "price_close": 1.05,
                 "volume_traded": 1000000,
+                "trades_count": 8,
             }
             for hour in range(24)
             for minute in range(0, 60, 15)

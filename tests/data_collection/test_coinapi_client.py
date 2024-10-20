@@ -38,7 +38,7 @@ class TestCoinAPIClient(unittest.TestCase):
                 "price_low": 0.3384,
                 "price_close": 0.3385,
                 "volume_traded": 28615.34,
-                "trades_count": 42,
+                "trades_count": 7,
             }
         ]
         mock_response.raise_for_status.return_value = None
