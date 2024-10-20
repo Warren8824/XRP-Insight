@@ -17,7 +17,7 @@ OHLCVData15Min = models["OHLCVData15Min"]
 API_CALLS_PER_DAY = 96  # 15-minute intervals for 24 hours
 ROWS_PER_API_CALL = 100
 DAILY_LIMIT = config["api_limits"]["coinapi_daily"]
-MAX_BACKFILL_DAYS = 100
+MAX_BACKFILL_DAYS = 90
 
 
 def round_to_15_minutes(dt):
@@ -46,7 +46,7 @@ def get_last_data_timestamp():
     db = SessionLocal()
     try:
         last_timestamp = db.query(func.max(OHLCVData15Min.timestamp)).scalar()
-        return last_timestamp
+        return last_timestamp.astimezone(timezone.utc)
     finally:
         db.close()
 
@@ -136,14 +136,17 @@ if __name__ == "__main__":
     else:
         missing_intervals = calculate_missing_intervals(last_timestamp, current_time)
 
-        if missing_intervals > MAX_BACKFILL_DAYS * API_CALLS_PER_DAY:
+        if missing_intervals == 0:
+            logger.info("Database is up to date. No backfill needed.")
+
+        elif missing_intervals > MAX_BACKFILL_DAYS * API_CALLS_PER_DAY:
             logger.info(
                 f"The data gap is more than {MAX_BACKFILL_DAYS} days. Please run init_db.py to reset all tables."
             )
         else:
             if prompt_user_for_backfill(missing_intervals):
-                start_date = round_to_15_minutes(last_timestamp + timedelta(minutes=15))
-                end_date = current_time
+                start_date = last_timestamp + timedelta(minutes=15)
+                end_date = round_to_15_minutes(current_time)
 
                 logger.info(
                     f"Starting historical data back-fill from {start_date} to {end_date}"
@@ -163,4 +166,4 @@ if __name__ == "__main__":
     # Next interval's data collection
     next_interval_start = round_to_15_minutes(current_time + timedelta(minutes=15))
     logger.info(f"Next data collection will be at {next_interval_start}")
-    logger.info("This will use 1 API call.")
+    logger.debug("This will use 1 API call.")

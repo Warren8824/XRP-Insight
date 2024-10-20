@@ -1,4 +1,5 @@
 import requests
+from datetime import timedelta
 from ..utils.config import config
 from ..utils.logger import data_collection_logger
 
@@ -78,9 +79,12 @@ class CoinAPIClient:
             requests.exceptions.RequestException: If there's an error in the API request.
         """
         endpoint = f"{self.base_url}/ohlcv/BITSTAMP_SPOT_XRP_USD/history"
+
         params = {"period_id": "15MIN", "time_start": start_time.isoformat()}
+
         if end_time:
-            params["time_end"] = end_time.isoformat()
+            # Add one interval to ensure we include the end_time data
+            params["time_end"] = (end_time + timedelta(minutes=15)).isoformat()
             params["limit"] = min(
                 limit, self.daily_limit
             )  # Ensure we don't exceed daily limit(100 candles equals one api call credit)

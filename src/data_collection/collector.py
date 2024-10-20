@@ -146,7 +146,7 @@ def collect_historical_data(
             f"Collecting historical OHLCV data from {start_date} to {end_date}..."
         )
 
-        while current_date < end_date:
+        while current_date <= end_date:
             next_date = min(current_date + timedelta(days=1), end_date)
             ohlcv_data = coinapi_client.get_historical_ohlcv_data(
                 current_date, next_date
@@ -183,6 +183,8 @@ def collect_historical_data(
                 f"Stored historical OHLCV data for {current_date.date()}"
             )
             current_date = next_date
+            if current_date >= end_date: # Break loop after collecting most recent timestamp
+                break
     except Exception as e:
         db.rollback()
         data_collection_logger.error(f"Error collecting historical data: {str(e)}")
