@@ -83,7 +83,7 @@ def collect_and_store_ohlcv_data(db: Session, coinapi_client: CoinAPIClient = No
         ohlcv_data = coinapi_client.get_ohlcv_data()
 
         for candle in ohlcv_data:
-            timestamp_str = candle["time_period_start"].rstrip("Z")
+            timestamp_str = candle["time_period_end"].rstrip("Z")
             if "." in timestamp_str:
                 timestamp_str = timestamp_str[
                     : timestamp_str.index(".")
@@ -160,7 +160,7 @@ def collect_historical_data(
             )
 
             for candle in ohlcv_data:
-                timestamp_str = candle["time_period_start"].rstrip("Z")
+                timestamp_str = candle["time_period_end"].rstrip("Z")
                 if "." in timestamp_str:
                     timestamp_str = timestamp_str[
                         : timestamp_str.index(".")
