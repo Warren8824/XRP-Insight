@@ -46,7 +46,10 @@ def get_last_data_timestamp():
     db = SessionLocal()
     try:
         last_timestamp = db.query(func.max(OHLCVData15Min.timestamp)).scalar()
-        return last_timestamp.astimezone(timezone.utc)
+        if last_timestamp is not None:
+            return last_timestamp.astimezone(timezone.utc)
+        else:
+            return None
     finally:
         db.close()
 
