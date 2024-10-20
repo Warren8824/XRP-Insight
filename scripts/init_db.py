@@ -128,7 +128,7 @@ def prompt_user_for_action(engine):
             else:
                 scripts_logger.info(f"Table {table_name} has no data.")
     update_schema = (
-        input("Do you require all tables to be reset for schema updates? y/n")
+        input("Do you require all tables to be reset for schema updates? y/n: ")
         .strip()
         .lower()
     )
