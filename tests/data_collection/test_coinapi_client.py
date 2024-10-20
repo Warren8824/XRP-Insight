@@ -93,7 +93,7 @@ class TestCoinAPIClient(unittest.TestCase):
         expected_params = {
             "period_id": "15MIN",
             "time_start": start_time.isoformat(),
-            "time_end": end_time.isoformat(),
+            "time_end": (end_time + timedelta(minutes=15)).isoformat(),
             "limit": min(
                 config["api_limits"]["coinapi_daily"],
                 config["api_limits"]["coinapi_daily"],
