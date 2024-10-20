@@ -16,10 +16,11 @@ class OHLCVData15Min(Base):
     low = Column(Float, nullable=False)
     close = Column(Float, nullable=False)
     volume = Column(Float, nullable=False)
+    trades_count = Column(Integer, nullable=False)
     price_change = Column(Float, nullable=False)
 
     def __repr__(self):
-        return f"<OHLCV15Data(id={self.id}, timestamp={self.timestamp}, close={self.close})>"
+        return f"<OHLCV15Data(id={self.id}, timestamp={self.timestamp}, close={self.close}, trades={self.trades_count})>"
 
     @validates("open", "high", "low", "close", "volume")
     def validate_fields(self, key, value):

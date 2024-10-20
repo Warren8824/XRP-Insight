@@ -53,6 +53,7 @@ class TestOHLCVData15Min(unittest.TestCase):
             low=90.0,
             close=105.0,
             volume=1000000.0,
+            trades_count=200,
             price_change=5.0,
         )
         self.session.add(ohlcv_data)

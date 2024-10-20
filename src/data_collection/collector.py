@@ -99,8 +99,9 @@ def collect_and_store_ohlcv_data(db: Session, coinapi_client: CoinAPIClient = No
                 low=candle["price_low"],
                 close=candle["price_close"],
                 volume=candle["volume_traded"],
+                trades_count=candle["trades_count"],
                 price_change=candle["price_close"] - candle["price_open"],
-            )
+                )
 
             db.add(new_ohlcv)
 
@@ -175,6 +176,7 @@ def collect_historical_data(
                     low=candle["price_low"],
                     close=candle["price_close"],
                     volume=candle["volume_traded"],
+                    trades_count=candle["trades_count"],
                     price_change=candle["price_close"] - candle["price_open"],
                 )
 
