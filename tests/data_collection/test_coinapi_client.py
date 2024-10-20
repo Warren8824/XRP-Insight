@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from src.data_collection.coinapi_client import CoinAPIClient
 from src.utils.config import config
 
