@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 from src.data_collection.coinapi_client import CoinAPIClient
 from src.utils.config import config
 
@@ -93,7 +93,7 @@ class TestCoinAPIClient(unittest.TestCase):
         expected_params = {
             "period_id": "15MIN",
             "time_start": start_time.isoformat(),
-            "time_end": (end_time + timedelta(minutes=15)).isoformat(),
+            "time_end": end_time.isoformat(),
             "limit": min(
                 config["api_limits"]["coinapi_daily"],
                 config["api_limits"]["coinapi_daily"],
