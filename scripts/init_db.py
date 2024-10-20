@@ -76,33 +76,22 @@ def fetch_table_date_range(engine, table_name, timestamp_column):
         return result[0], result[1]
 
 
-def drop_all_data(engine):
+def drop_and_recreate_all_tables(engine):
+    """
+    Drop all tables and recreate them fresh.
+    """
     with engine.connect() as conn:
-        for table in TABLES:
-            table_name = table["name"]
-            row_count_before = conn.execute(
-                text(f"SELECT COUNT(*) FROM {table_name}")
-            ).scalar()
-            scripts_logger.info(
-                f"Table {table_name} has {row_count_before} rows before deletion."
-            )
+        # Drop all tables
+        scripts_logger.info("Dropping all tables...")
+        Base.metadata.drop_all(engine)
+        conn.commit()  # Ensure the changes are committed
 
-            truncate_command = f"TRUNCATE TABLE {table_name} CASCADE"
-            scripts_logger.info(f"Executing command: {truncate_command}")
-            conn.execute(text(truncate_command))
-            conn.commit()
+        # Recreate all tables
+        scripts_logger.info("Recreating all tables based on current model schema...")
+        Base.metadata.create_all(engine)
+        conn.commit()  # Ensure the changes are committed
 
-            row_count_after = conn.execute(
-                text(f"SELECT COUNT(*) FROM {table_name}")
-            ).scalar()
-            scripts_logger.info(
-                f"Table {table_name} has {row_count_after} rows after deletion."
-            )
-
-            if row_count_after != 0:
-                scripts_logger.warning(
-                    f"Warning: Data in {table_name} was not deleted as expected."
-                )
+        scripts_logger.info("All tables have been recreated.")
 
 
 def prompt_user_for_action(engine):
@@ -123,11 +112,12 @@ def prompt_user_for_action(engine):
                 )
 
                 if user_input == "yes":
-                    connection.execute(text(f"TRUNCATE TABLE {table_name} CASCADE;"))
-                    connection.commit()  # Complete the truncation of the data
+                    # Drop and recreate all tables if the user chooses to delete data
+                    drop_and_recreate_all_tables(engine)
                     scripts_logger.info(
-                        f"All data from {table_name} has been truncated."
+                        f"All tables have been dropped and recreated fresh."
                     )
+                    return  # Exit the loop as all tables are dropped and recreated
                 elif user_input == "no":
                     scripts_logger.info(
                         f"Continuing with the existing data in {table_name}."
@@ -137,8 +127,26 @@ def prompt_user_for_action(engine):
                     return prompt_user_for_action(engine)  # Recursively prompt again
             else:
                 scripts_logger.info(f"Table {table_name} has no data.")
+    update_schema = (
+        input(
+            "Do you require all tables to be reset for schema updates? y/n"
+        )
+        .strip()
+        .lower()
+    )
+    if update_schema == "y":
+        # Drop and recreate all tables if the user chooses to update schema
+        drop_and_recreate_all_tables(engine)
+        scripts_logger.info(
+            f"All tables have been dropped and recreated, schema updates applied."
+        )
+        return  # Exit the loop as all tables are dropped and recreated
+    elif update_schema == "n":
+        scripts_logger.info(f"Table schema not modified.")
+    else:
+        print("Invalid input. Please enter 'yes' or 'no'.")
+        return update_schema  # Recursively prompt again
 
-    print("No more tables to process.")
 
 
 def init_db():
