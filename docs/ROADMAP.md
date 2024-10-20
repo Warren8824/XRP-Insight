@@ -13,9 +13,11 @@ This roadmap outlines the planned development phases for XRP Insight. Please not
 - [ ] Simple scheduling system for data collection and processing
 - [x] Basic error handling and logging
 - [ ] Initial unit tests
-- [ ] Github workflow setup for development environment
+- [x] Github workflow setup for development environment
 - [ ] Create initial knowledge bank schema and population script
-- [ ] Implement basic config management system
+- [x] Implement basic config management system
+- [ ] Finalise Historical data back-fill script
+- [ ] Finalise current data collection functions
 
 ## Phase 2: Enhanced Analysis and Basic AI Integration
 
