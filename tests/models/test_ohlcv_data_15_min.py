@@ -53,7 +53,7 @@ class TestOHLCVData15Min(unittest.TestCase):
             low=90.0,
             close=105.0,
             volume=1000000.0,
-            trades_count=200,
+            trades_count=20,
             price_change=5.0,
         )
         self.session.add(ohlcv_data)
@@ -75,6 +75,7 @@ class TestOHLCVData15Min(unittest.TestCase):
                 close=-105.0,
                 volume=-1000000.0,
                 price_change=-5.0,
+                trades_count=22,
             )
             self.session.add(ohlcv_data)
             self.session.flush()  # Flush to trigger SQL, but don't commit
@@ -101,6 +102,7 @@ class TestOHLCVData15Min(unittest.TestCase):
                 close=105.0,
                 volume=1000000.0,
                 price_change=5.0,
+                trades_count=200,
             )
             self.session.add(ohlcv_data)
             self.session.flush()  # Flush to trigger SQL, but don't commit
