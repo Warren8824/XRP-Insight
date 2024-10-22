@@ -150,9 +150,7 @@ pyrsistent==0.18.1
 pytest==7.4.2
 pytest-base-url==2.1.0
 pytest-playwright==0.4.4
-python-apt==2.4.0+ubuntu3
 python-bidi==0.4.2
-python-dateutil==2.9.0.post0
 python-dotenv==1.0.0
 python-editor==1.0.4
 python-slugify==8.0.4
