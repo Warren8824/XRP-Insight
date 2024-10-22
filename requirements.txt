@@ -22,7 +22,6 @@ chardet==5.2.0
 charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
-command-not-found==0.3
 contourpy==1.2.1
 cryptography==42.0.5
 cssselect2==0.7.0
