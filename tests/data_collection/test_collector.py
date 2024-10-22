@@ -56,7 +56,7 @@ class TestCollector(unittest.TestCase):
         mock_coinapi_instance = mock_coinapi.return_value
         mock_coinapi_instance.get_ohlcv_data.return_value = [
             {
-                "time_period_start": "2023-01-01T00:00:00Z",
+                "time_period_end": "2023-01-01T00:00:00Z",
                 "price_open": 1.0,
                 "price_high": 1.1,
                 "price_low": 0.9,
@@ -90,7 +90,7 @@ class TestCollector(unittest.TestCase):
         mock_coinapi_instance = mock_coinapi.return_value
         mock_data = [
             {
-                "time_period_start": f"2023-01-01T{hour:02d}:{minute:02d}:00Z",
+                "time_period_end": f"2023-01-01T{hour:02d}:{minute:02d}:00Z",
                 "price_open": 1.0,
                 "price_high": 1.1,
                 "price_low": 0.9,
