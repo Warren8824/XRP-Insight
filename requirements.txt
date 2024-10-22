@@ -173,7 +173,7 @@ scikit-learn==1.4.1.post1
 scipy==1.12.0
 seaborn==0.13.2
 SecretStorage==3.3.1
-Send2Trash==1.8.1b0
+Send2Trash
 sentence-transformers==2.6.0
 setuptools-scm==8.1.0
 six==1.16.0
