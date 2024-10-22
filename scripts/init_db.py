@@ -4,6 +4,7 @@ import psycopg2
 from psycopg2 import sql
 
 import sys
+import functools
 
 import path_setup  # Needed to access src folder
 from src.utils.logger import scripts_logger
@@ -19,21 +20,9 @@ TechnicalIndicators15Min = models["TechnicalIndicators15Min"]
 
 # Define global table information
 TABLES = [
-    {
-        "name": "market_data_15_min",
-        "model": MarketData15Min,
-        "timestamp_column": "timestamp",
-    },
-    {
-        "name": "ohlcv_data_15_min",
-        "model": OHLCVData15Min,
-        "timestamp_column": "timestamp",
-    },
-    {
-        "name": "technical_indicators_15_min",
-        "model": TechnicalIndicators15Min,
-        "timestamp_column": "timestamp",
-    },
+    {"name": "market_data_15_min", "model": MarketData15Min},
+    {"name": "ohlcv_data_15_min", "model": OHLCVData15Min},
+    {"name": "technical_indicators_15_min", "model": TechnicalIndicators15Min},
 ]
 
 
@@ -66,84 +55,167 @@ def check_tables_exist(inspector):
     return required_tables.issubset(existing_tables)
 
 
-def fetch_table_date_range(engine, table_name, timestamp_column):
-    with engine.connect() as conn:
-        query = f"""
-            SELECT MIN({timestamp_column}), MAX({timestamp_column})
-            FROM {table_name}
-        """
-        result = conn.execute(text(query)).fetchone()
-        return result[0], result[1]
-
-
 def drop_and_recreate_all_tables(engine):
-    """
-    Drop all tables and recreate them fresh.
-    """
-    with engine.connect() as conn:
-        # Drop all tables
-        scripts_logger.info("Dropping all tables...")
-        Base.metadata.drop_all(engine)
-        conn.commit()  # Ensure the changes are committed
+    scripts_logger.info("Starting drop_and_recreate_all_tables function")
+    try:
+        with engine.begin() as conn:  # Use begin() instead of connect() to ensure transaction
+            try:
+                # Set a timeout to prevent hanging
+                conn.execute(text("SET statement_timeout = '30000';"))
 
-        # Recreate all tables
-        scripts_logger.info("Recreating all tables based on current model schema...")
-        Base.metadata.create_all(engine)
-        conn.commit()  # Ensure the changes are committed
+                # Drop all tables
+                scripts_logger.info("Dropping all tables...")
+                for table in TABLES:
+                    scripts_logger.info(f"Attempting to drop {table['name']}")
+                    drop_table(conn, table["name"])
+                    # Verify the drop
+                    result = conn.execute(
+                        text(
+                            "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = :table_name)"
+                        ),
+                        {"table_name": table["name"]},
+                    ).scalar()
+                    if not result:
+                        scripts_logger.info(f"Successfully dropped {table['name']}")
+                    else:
+                        scripts_logger.error(f"Failed to drop {table['name']}")
+                        raise Exception(f"Failed to drop {table['name']}")
 
-        scripts_logger.info("All tables have been recreated.")
+                scripts_logger.info(
+                    "All tables dropped. Attempting to recreate tables..."
+                )
+
+                # Recreate all tables
+                scripts_logger.info(
+                    "Recreating all tables based on current model schema..."
+                )
+                Base.metadata.create_all(bind=conn)  # Use the same connection
+
+                # Verify tables were created
+                for table in TABLES:
+                    result = conn.execute(
+                        text(
+                            "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = :table_name)"
+                        ),
+                        {"table_name": table["name"]},
+                    ).scalar()
+                    if result:
+                        scripts_logger.info(f"Successfully created {table['name']}")
+                    else:
+                        scripts_logger.error(f"Failed to create {table['name']}")
+                        raise Exception(f"Failed to create {table['name']}")
+
+                scripts_logger.info("All tables have been recreated.")
+
+            finally:
+                # Reset timeout
+                try:
+                    conn.execute(text("SET statement_timeout = '0';"))
+                except Exception as e:
+                    scripts_logger.error(f"Error resetting statement timeout: {str(e)}")
+    except Exception as e:
+        scripts_logger.error(
+            f"Error in drop_and_recreate_all_tables: {str(e)}", exc_info=True
+        )
+        raise
+    finally:
+        scripts_logger.info("Exiting drop_and_recreate_all_tables function")
+
+
+def drop_table(conn, table_name):
+    try:
+        # First, ensure no other sessions are connected to this table
+        conn.execute(
+            text(
+                """
+            SELECT pg_terminate_backend(pid) 
+            FROM pg_stat_activity 
+            WHERE datname = current_database()
+            AND pid <> pg_backend_pid()
+            AND state = 'idle'
+        """
+            )
+        )
+
+        # Drop the table
+        conn.execute(text(f"DROP TABLE IF EXISTS {table_name} CASCADE;"))
+        scripts_logger.info(f"Dropped table: {table_name}")
+    except Exception as e:
+        scripts_logger.error(f"Error dropping table {table_name}: {str(e)}")
+        raise  # Re-raise the exception to be handled by the calling function
 
 
 def prompt_user_for_action(engine):
-    with engine.connect() as connection:
-        for table in TABLES:
-            table_name = table["name"]
-            row_count = connection.execute(
-                text(f"SELECT COUNT(*) FROM {table_name};")
-            ).scalar()
+    try:
+        with engine.connect() as connection:
+            # Start a new transaction
+            with connection.begin():
+                try:
+                    # Set a timeout to prevent hanging
+                    connection.execute(
+                        text("SET statement_timeout = '30000';")
+                    )  # 30 seconds
 
-            if row_count > 0:
-                user_input = (
-                    input(
-                        f"Table {table_name} has {row_count} rows. Do you want to delete all data from this table and begin fresh? (yes/no): "
-                    )
-                    .strip()
-                    .lower()
-                )
+                    for table in TABLES:
+                        table_name = table["name"]
+                        try:
+                            row_count = connection.execute(
+                                text(f"SELECT COUNT(*) FROM {table_name};")
+                            ).scalar()
 
-                if user_input == "yes":
-                    # Drop and recreate all tables if the user chooses to delete data
-                    drop_and_recreate_all_tables(engine)
-                    scripts_logger.info(
-                        f"All tables have been dropped and recreated fresh."
-                    )
-                    return  # Exit the loop as all tables are dropped and recreated
-                elif user_input == "no":
-                    scripts_logger.info(
-                        f"Continuing with the existing data in {table_name}."
-                    )
-                else:
-                    print("Invalid input. Please enter 'yes' or 'no'.")
-                    return prompt_user_for_action(engine)  # Recursively prompt again
-            else:
-                scripts_logger.info(f"Table {table_name} has no data.")
+                            if row_count > 0:
+                                user_input = (
+                                    input(
+                                        f"Table {table_name} has {row_count} rows. Do you want to delete all data from this table and begin fresh? (yes/no): "
+                                    )
+                                    .strip()
+                                    .lower()
+                                )
+
+                                if user_input == "yes":
+                                    return True  # Signal to drop and recreate tables
+                                elif user_input == "no":
+                                    scripts_logger.info(
+                                        f"Continuing with the existing data in {table_name}."
+                                    )
+                                else:
+                                    print("Invalid input. Please enter 'yes' or 'no'.")
+                                    return prompt_user_for_action(engine)
+                            else:
+                                scripts_logger.info(f"Table {table_name} has no data.")
+
+                        except Exception as e:
+                            scripts_logger.error(
+                                f"Error checking table {table_name}: {str(e)}"
+                            )
+                            raise
+
+                finally:
+                    # Always reset timeout
+                    try:
+                        connection.execute(text("SET statement_timeout = '0';"))
+                    except Exception as e:
+                        scripts_logger.error(
+                            f"Error resetting statement timeout: {str(e)}"
+                        )
+
+    except Exception as e:
+        scripts_logger.error(f"Error in prompt_user_for_action: {str(e)}")
+        raise
+
     update_schema = (
-        input("Do you require all tables to be reset for schema updates? y/n: ")
+        input("Do you require all tables to be reset for schema updates? (yes/no): ")
         .strip()
         .lower()
     )
-    if update_schema == "y":
-        # Drop and recreate all tables if the user chooses to update schema
-        drop_and_recreate_all_tables(engine)
-        scripts_logger.info(
-            f"All tables have been dropped and recreated, schema updates applied."
-        )
-        return  # Exit the loop as all tables are dropped and recreated
-    elif update_schema == "n":
-        scripts_logger.info(f"Table schema not modified.")
+    if update_schema == "yes":
+        return True  # Signal to drop and recreate tables
+    elif update_schema == "no":
+        scripts_logger.info("Table schema not modified.")
+        return False
     else:
         print("Invalid input. Please enter 'yes' or 'no'.")
-        return update_schema  # Recursively prompt again
+        return prompt_user_for_action(engine)
 
 
 def init_db():
@@ -160,38 +232,13 @@ def init_db():
 
         if check_tables_exist(inspector):
             print("All required tables already exist.")
-            prompt_user_for_action(engine)
+            should_recreate = prompt_user_for_action(engine)
+            if should_recreate:
+                drop_and_recreate_all_tables(engine)
         else:
             scripts_logger.info("Initializing the database...")
-
-            with engine.connect() as conn:
-                conn.execute(text("CREATE EXTENSION IF NOT EXISTS timescaledb"))
-                scripts_logger.info("TimescaleDB extension created successfully.")
-
             Base.metadata.create_all(engine)
             scripts_logger.info("All required tables created successfully.")
-
-            with engine.connect() as conn:
-                for table in TABLES:
-                    table_name = table["name"]
-                    time_column = table["timestamp_column"]
-                    if table_name in inspector.get_table_names():
-                        try:
-                            conn.execute(
-                                text(
-                                    f"SELECT create_hypertable('{table_name}', '{time_column}', if_not_exists => TRUE, chunk_time_interval => INTERVAL '1 hour', migrate_data => TRUE)"
-                                )
-                            )
-                            scripts_logger.info(f"Created hypertable for {table_name}")
-                        except Exception as e:
-                            scripts_logger.error(
-                                f"Error creating hypertable for {table_name}: {str(e)}",
-                                exc_info=True,
-                            )
-                    else:
-                        scripts_logger.warning(
-                            f"Table {table_name} does not exist (should have been created)"
-                        )
 
     except OperationalError as e:
         scripts_logger.error(f"Database connection error: {str(e)}")
