@@ -81,34 +81,34 @@ def prompt_user_for_days():
                     f"Warning: This exceeds the daily limit of {DAILY_LIMIT} API calls."
                 )
 
-            confirm = input("Do you want to proceed? (y/n): ").lower()
-            if confirm == "y":
+            confirm = input("Do you want to proceed? (yes/no): ").lower()
+            if confirm == "yes":
                 return days
-            elif confirm == "n":
+            elif confirm == "no":
                 print("Operation cancelled.")
                 return None
             else:
-                print("Invalid input. Please enter 'y' or 'n'.")
+                print("Invalid input. Please enter 'yes' or 'no'.")
         except ValueError:
             print("Invalid input. Please enter a number.")
 
 
 def prompt_user_for_backfill(missing_intervals):
     api_calls = calculate_api_calls(missing_intervals)
-    print(f"There are {missing_intervals} missing 15-minute intervals.")
+    print(f"There are {missing_intervals} missing 15-minute intervals, totalling {missing_intervals / 4} hours.")
     print(f"This will require approximately {api_calls} API calls.")
 
     if api_calls > DAILY_LIMIT:
         print(f"Warning: This exceeds the daily limit of {DAILY_LIMIT} API calls.")
 
     while True:
-        confirm = input("Do you want to proceed with the back-fill? (y/n): ").lower()
-        if confirm == "y":
+        confirm = input("Do you want to proceed with the back-fill? (yes/no): ").lower()
+        if confirm == "yes":
             return True
-        elif confirm == "n":
+        elif confirm == "no":
             return False
         else:
-            print("Invalid input. Please enter 'y' or 'n'.")
+            print("Invalid input. Please enter 'yes' or 'no'.")
 
 
 if __name__ == "__main__":
@@ -140,7 +140,7 @@ if __name__ == "__main__":
         missing_intervals = calculate_missing_intervals(last_timestamp, current_time)
 
         if missing_intervals == 0:
-            logger.info("Database is up to date. No backfill needed.")
+            logger.info("Database is up to date. No back-fill needed.")
 
         elif missing_intervals > MAX_BACKFILL_DAYS * API_CALLS_PER_DAY:
             logger.info(
